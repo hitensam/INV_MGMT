@@ -1,0 +1,46 @@
+{% extends 'app1/base.html' %}
+{% block content %}
+<style>
+    form {color: brown; padding: 25px 50px 75px 100px;}
+</style>
+<body>
+    <form method="post" action="">  
+        {% csrf_token %}
+        <div class="mb-3">
+          <label for="text" class="form-label">Item Name</label>
+          <input type="text" class="form-control" placeholder="Item Name" required name="item" value="" id="item" onblur="checkLength()">
+        </div>
+        <div class="mb-3">
+            <label for="text" class="form-label">Width</label>
+            <input type="text" class="form-control" placeholder="Width" required name="width" value="" step="any">
+        </div>
+        <div class="mb-3">
+            <label for="text" class="form-label">Roll No.</label>
+            <input type="number" class="form-control" placeholder="NUMERIC ONLY" name="Roll_no" value="" required>
+        </div>
+        <div class="mb-3">
+            <label for="text" class="form-label">Customer Phone</label>
+            <input type="number" class="form-control" placeholder="NUMERIC ONLY" name="customer_phone" value="" >
+        </div>
+          <!-- <br> -->
+          <br>
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+      </body>
+      <script>
+        function checkLength()
+        {
+          document.getElementById('item').value=document.getElementById('item').value.trim()
+          // alert(document.getElementById('item').value)
+          if (document.getElementById('item').value.length >= 50)
+          {
+            alert('Please enter the item name below 50 characters');
+            document.getElementById('item').value = ""
+          }
+        }
+    
+      </script>
+      
+    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" async defer></script> -->
+</body>
+{% endblock %}

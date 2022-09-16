@@ -1,0 +1,121 @@
+{% extends 'app1/base.html' %}
+{% load static %}
+{% block content %}
+    <style>
+       table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%;
+  border: 1px solid #ddd;
+}
+
+th, td {
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even){background-color: #f2f2f2}
+    </style>
+    <body>
+        {% if heading %}
+        <h1 style="color: rgb(255, 0, 21); text-align: center;">{{heading}}</h1>
+        {% endif %}   
+<div class="container mt-3" style="overflow-x:auto;">
+    {% if stock %}
+    <form action="" method="post">
+        {% csrf_token %}
+        <input type="text" placeholder="enter query" name="query"  id="spaceRemove" onblur="myFunction()">
+        <input type="radio" name="choice" value="item_name">Item Name
+        <input type="radio" name="choice" value="roll_no.">Roll No.
+        <input type="radio" name="choice" value="width">Width
+        <input type="radio" name="choice" value="sold">Sold
+        <input type="radio" name="choice" value="customer_no">customer No.
+        <input type="radio" name="choice" value="available&sold">Available&Sold
+        <input type="submit" >
+    </form>
+    {% endif %}
+  <table class="table table-hover">
+      <thead>
+        <tr>
+          {% if customer %}
+          <th>Serial No.</th>
+          <th>Name</th>
+          <th>Contact</th>
+          {% endif %}
+          {% if stock %}
+          <th>Serial No.</th>
+          <th>ITEM</th>
+          <th>ROLL NO. </th>
+          <th>WIDTH</th>
+          <th>NET WEIGHT</th>
+          <th>GROSS WEIGHT</th>
+          <th>SOLD</th>
+        {% endif %}
+
+        {% if sold %}
+        <th>Serial No.</th>
+        <th>ITEM</th>
+        <th>ROLL NO. </th>
+        <th>WIDTH</th>
+        <th>NET WEIGHT</th>
+        <th>GROSS WEIGHT</th>
+        <th>DATE</th>
+        <th>CUSTOMER NAME</th>
+        <th>CUSTOMER MOB.</th>
+        {% endif %}
+        </tr>
+      </thead>
+      <tbody>
+        {% if customer %}
+        {% for data in customer %}
+        <tr>
+        <th scope="row" class="sno"></th>
+          <td class="count">{{data.customer_name}}</td>
+          <td>{{data.customer_phone}}</td>
+        </tr>
+        {% endfor %}
+        {% endif %}
+        {% if stock %}
+        {% for data in stock %}
+        <tr>
+          <th scope="row" class="sno"></th>
+          <td class="count">{{data.item}}</td>
+          <td>{{data.Roll_no}}</td>
+          <td>{{data.width}}</td>
+          <td class="net" style="text-align: center;">{{data.Net_wt}}</td>
+          <td class="gross" style="text-align: center;">{{data.Gr_wt}}</td>
+          <td>{{data.sell}}</td>
+        </tr>
+        {% endfor %}
+        <tr>
+          <td colspan="4" style="text-align: center;">Total</td>
+          <td class="netWt" style="text-align: center;"></td>
+          <td class="Gross" style="text-align: center;"></td>
+        </tr>
+        {% endif %}
+        {% if sold %}
+        {% for data in sold %}
+        <tr>
+          <th scope="row" class="sno"></th>
+          <td class="count">{{data.item_purchase.item}}</td>
+          <td>{{data.item_purchase.Roll_no}}</td>
+          <td>{{data.item_purchase.width}}</td>
+          <td  class="net" style="text-align: center;">{{data.item_purchase.Net_wt}}</td>
+          <td class="gross" style="text-align: center;">{{data.item_purchase.Gr_wt}}</td>
+          <td>{{data.purchase_date}}</td>
+          <td>{{data.customer_name.customer_name}}</td>
+          <td>{{data.customer_name.customer_phone}}</td>
+        </tr>
+        {% endfor %}
+        <tr>
+          <td colspan="4" style="text-align: center;">Total</td>
+          <td class="netWt" style="text-align: center;"></td>
+          <td class="Gross" style="text-align: center;"></td>
+        </tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+  <script src="{% static 'app1/modify.js' %}"></script>
+   </body>
+{% endblock %}

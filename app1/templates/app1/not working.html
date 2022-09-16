@@ -1,0 +1,36 @@
+{% extends 'app1/base.html' %}
+{% block content %}
+<style>
+    form {color: brown; padding: 25px 50px 75px 100px;}
+</style>
+<body>
+    <form method="post" action="{{url('view', args = customer)}}">  
+        {% csrf_token %}
+        <div class="mb-3">
+          <label for="text" class="form-label">Item Name</label>
+          <input type="text" class="form-control" placeholder="Item Name" required name="item" value="">
+        </div>
+        <div class="mb-3">
+          <label for="text" class="form-label">Width</label>
+          <input type="text" class="form-control" placeholder="Width" required name="width" value="">
+        </div>
+        <div class="mb-3">
+            <label for="text" class="form-label">Roll No.</label>
+            <input type="number" class="form-control" placeholder="NUMERIC ONLY" name="Roll_no" value="" reuired>
+        </div>
+        <div class="mb-3">
+            <label for="text" class="form-label">Net Weight</label>
+            <input type="number" class="form-control" placeholder="NUMERIC ONLY" name="Net_wt" value="" required>
+        </div>
+        <div class="mb-3">
+            <label for="text" class="form-label">Gross Weight</label>
+            <input type="number" class="form-control" placeholder="NUMERIC ONLY" name="Gr_wt" value="" >
+        </div>
+          <!-- <br> -->
+          <br>
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+    
+    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" async defer></script> -->
+</body>
+{% endblock %}
