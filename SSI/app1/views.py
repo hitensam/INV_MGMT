@@ -132,7 +132,7 @@ def view(request, choice=0):
                             except:
                                 return render(request, 'app1/view.html', context={'heading' : 'NOTHING FOUND'})
                         elif (details['choice'] == 'item_name'):
-                            stock = models.stock.objects.filter(item = (details['query'])).filter(Q(sell_no=0) & Q(sell='0')).all()
+                            stock = models.stock.objects.filter(item = (details['query'])).all() #.filter(Q(sell_no=0) & Q(sell='0'))
                             return render(request, 'app1/view.html', context={'stock' : stock, 'heading' : 'NOTHING FOUND'}) if len(stock)==0 else render(request, 'app1/view.html', context={'stock' : stock, 'heading' : 'STOCK'})
                         else:
                             stock = models.stock.objects.all()
