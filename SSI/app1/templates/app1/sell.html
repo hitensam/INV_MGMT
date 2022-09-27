@@ -1,0 +1,233 @@
+{% extends 'app1/base.html' %}
+{% block content %}
+<style>
+    form {color: brown; padding: 25px 50px 75px 100px;}
+
+</style>
+<body>
+    <form method="post" action="">  
+        {% csrf_token %}
+        <div class="mb-3 autocomplete" id="autocomplete">
+          <label for="text" class="form-label">Item Name</label>
+          <input type="text" class="form-control autocomplete-input" placeholder="Item Name" required name="item" value="" id="item" onblur="checkLength()">
+          <ul class="autocomplete-result-list item"></ul>
+        </div>
+        <div class="mb-3 autocomplete" id="autocomplete1">
+            <label for="text" class="form-label">Width</label>
+            <input type="text" class="form-control autocomplete-input" placeholder="Width" required name="width" value="" step="any" id="width">
+            <ul class="autocomplete-result-list width"></ul>
+        </div>
+        <div class="mb-3 autocomplete" id="autocomplete2">
+            <label for="text" class="form-label">Roll No.</label>
+            <input id = "Roll_no" type="number" class="form-control autocomplete-input" placeholder="NUMERIC ONLY" name="Roll_no" value="" required onblur="show()">
+            <ul class="autocomplete-result-list roll"></ul>
+        </div>
+        <div class="mb-3 autocomplete" id="autocomplete3">
+            <label for="text" class="form-label">Party Name</label>
+            <input type="text" class="form-control autocomplete-input" placeholder="PARTY NAME" value="" id="party_name" onblur="getCustomerPhone()">
+            <ul class="autocomplete-result-list "></ul>
+        </div>
+        <div class="mb-3">
+          <label for="text" class="form-label">Party Contact</label>
+          <input type="text" class="form-control" placeholder="PARTY CONTACT" name="customer_phone" value="" id="party_phone" onblur="checkUndefined()">
+          <ul class="autocomplete-result-list"></ul>
+      </div>
+        <div class="mb-3">
+            <label for="text" class="form-label">Date</label>
+            <input type="date" class="form-control" placeholder="NUMERIC ONLY" name="sell_date" value="" >
+        </div>
+        <div class="mb-3">
+            <label for="text" class="form-label">Short Narration</label>
+            <input type="text" class="form-control" placeholder="NUMERIC ONLY" name="short_narration" value="" onblur="checkLength1()" id="short_narration" required>
+        </div>
+          <!-- <br> -->
+          <br>
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+      </body>
+      <script>
+        function checkLength()
+        {
+          document.getElementById('item').value=document.getElementById('item').value.trim()
+          // document.getElementById('item').value = 'HSSI-3120-' + document.getElementById('item').value
+          // alert(document.getElementById('item').value)
+          if (document.getElementById('item').value.length >= 50)
+          {
+            alert('Please enter the item name below 50 characters');
+            document.getElementById('item').value = ""
+          }
+
+        }
+        function checkLength1()
+        {
+            document.getElementById('short_narration').value=document.getElementById('short_narration').value.trim()
+            if (document.getElementById('short_narration').value.length >= 50)
+          {
+            alert('Please enter the item name below 50 characters');
+            document.getElementById('short_narration').value = ""
+          }
+        }
+
+        new Autocomplete('#autocomplete', {
+          search : input=>
+          {
+            console.log(input)
+            const url = `/app1/search/?item_search=${input}&query=item`
+            return new Promise(resolve =>
+            {
+              fetch(url)
+              .then(response =>response.json())
+              .then(data =>
+              {
+                console.log(data)
+                
+                const unique = (value, index, self) => {
+                return self.indexOf(value) === index
+                }
+                data.data = data.data.filter(unique)
+                resolve(data.data)
+              }
+              )
+            })
+          },
+            onSubmit : result =>
+            {
+              console.log(result)
+            },
+            autoSelect : true
+            
+        }),
+        new Autocomplete('#autocomplete1', {
+          search : input=>
+          {
+            console.log(input)
+            const url = `/app1/search/?item_search=${document.getElementById('item').value}&item_width=${input}&query=item-width`
+            return new Promise(resolve =>
+            {
+              fetch(url)
+              .then(response =>response.json())
+              .then(data =>
+              {
+                console.log(data)
+                const unique = (value, index, self) => {
+                return self.indexOf(value) === index
+                }
+                data.data = data.data.filter(unique)
+                resolve(data.data)
+              })
+            })
+          },
+            onSubmit : result =>
+            {
+              console.log(result)
+            }
+            ,
+            autoSelect : true
+          }),
+          new Autocomplete('#autocomplete2', {
+          search : input=>
+          {
+            console.log(input)
+            const url = `/app1/search/?item_search=${document.getElementById('item').value}&item_width=${document.getElementById('width').value}&item_roll=${input}&query=item-width-roll`
+            return new Promise(resolve =>
+            {
+              fetch(url)
+              .then(response =>response.json())
+              .then(data =>
+              {
+                console.log(data)
+                resolve(data.data)
+              })
+            })
+          },
+            onSubmit : result =>
+            {
+              console.log(result)
+            }
+          }),
+          new Autocomplete('#autocomplete3', {
+          search : input=>
+          {
+            console.log(input)
+            const url = `/app1/search/?party_name=${input}`
+            return new Promise(resolve =>
+            {
+              fetch(url)
+              .then(response =>response.json())
+              .then(data =>
+              {
+                console.log(data)
+                resolve(data.data)
+              })
+            })
+          },
+            onSubmit : result =>
+            {
+              console.log(result)
+            }
+          })
+        
+      function getCustomerPhone()
+      {
+        const url = `/app1/search/?party_contact=${document.getElementById('party_name').value}`
+            return new Promise(resolve =>
+            {
+              fetch(url)
+              .then(response =>response.json())
+              .then(data =>
+              {
+                console.log(data.data[0])
+                // resolve(data.data)
+                document.getElementById('party_phone').value = data.data[0]
+                
+              })
+            })
+        
+        
+      }    
+
+      function show()
+      {
+        var item = document.getElementById('item');
+        var width = document.getElementById('width');
+        var Roll_no = document.getElementById('Roll_no');
+
+        const url = `/app1/search/?item_search=${item.value}&item_width=${width.value}&item_roll=${Roll_no.value}&return_alert=data`
+            return new Promise(resolve =>
+            {
+              fetch(url)
+              .then(response =>response.json())
+              .then(data =>
+              {
+                console.log(data.data)
+                // resolve(data.data)
+                if (data.data.length>0){
+                alert(
+                `Item Name : ${data.data[0]}\nItem Width : ${data.data[1]}\nRoll No. : ${data.data[2]}
+Net Weight : ${data.data[3]}\nGross Weight : ${data.data[4]}\nCustomer Name : ${data.data[5]}\nCustomer Number : ${data.data[6]}
+                `)
+                }
+                else{
+                  alert('ENTER VALID DETAILS')
+                }
+                
+              })
+            })
+      }
+    
+      // function clearList()
+      // {
+      //   document.getElementsByClassName('autocomplete-result-list')[0].innerHTML=''
+      // }
+      function checkUndefined(){
+      if(document.getElementById('party_phone').value ==='undefined' && document.getElementById('party_phone').value.length!=10)
+        {
+          document.getElementById('party_phone').value = ""
+          alert('ENTER A VALID PARTY NAME')
+        }
+      }
+      </script>
+      
+    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" async defer></script> -->
+</body>
+{% endblock %}
