@@ -1,5 +1,5 @@
-from email import message
-import re
+# from email import message
+# import re
 from time import time
 from django.shortcuts import render, redirect
 from  django.http import HttpResponse, Http404,HttpResponseNotFound, HttpResponseRedirect, JsonResponse
@@ -9,7 +9,8 @@ from django.views.decorators.csrf import csrf_protect
 from .   import  models #customer, Sold, stock
 from django.db.models import Q
 from . import IST_TIME as now
-import bcrypt
+import csv
+# import bcrypt
 # Create your views here.
 
 # def login(request):
@@ -49,6 +50,13 @@ import bcrypt
 #     except:
 #         return redirect('/app1/login/')
 
+
+# def error_404(request, exception):
+#     return HttpResponseRedirect(reverse('view', args='stock'))
+
+# def error_500(request, exception):
+#     return HttpResponseRedirect(reverse('view', args='stock'))
+
 def addcustomer(request):
     if (request.method == 'POST' ): #and 'user_logged' in request.session
         details = request.POST
@@ -61,19 +69,19 @@ def addcustomer(request):
             flag = 0
         if (flag):
                 context = {'message' : 'Details exists already'}
-                return render(request,'app1/customer.html', context=context)
+                return render(request,'app1/addcustomer.html', context=context)
         else:
             try:    
                 obj = models.customer(customer_name = details['cust_name'], customer_phone = int(details['cust_mob']))
                 obj.save()
                 context = {'message' : 'Details Saved'}
-                return render(request,'app1/customer.html', context=context)
+                return render(request,'app1/addcustomer.html', context=context)
             except:
                 context = {'message' : 'Please enter valid details'}
-                return render(request,'app1/customer.html', context=context)
+                return render(request,'app1/addcustomer.html', context=context)
 
     else:
-        return render(request,'app1/customer.html')
+        return render(request,'app1/addcustomer.html', context={'heading': "ADD CUSTOMER"})
 
 
 def addStock(request):
@@ -89,13 +97,13 @@ def addStock(request):
             flag = 0
         if (flag):
             context = {'message' : 'Details exists already with same item and roll no.'}
-            return render(request,'app1/stock.html', context=context)
+            return render(request,'app1/addstock.html', context=context)
         else:
             obj = models.stock(item = details['item'], width = float(details['width']), Roll_no = int(details['Roll_no']), Net_wt = float(details['Net_wt']), Gr_wt = float(details['Gr_wt']))
             obj.save()
-            return render(request, 'app1/stock.html', context = {'message' : 'stock added'})
+            return render(request, 'app1/addstock.html', context = {'message' : 'stock added'})
     else:
-        return render(request, 'app1/stock.html', context={'message' : ''})
+        return render(request, 'app1/addstock.html', context={'heading' : 'ADD STOCK'})
 
 
 def view(request, choice=0):
@@ -113,30 +121,50 @@ def view(request, choice=0):
                         elif (details['choice'] == 'roll_no.'):
                             try:
                                 stock = models.stock.objects.filter(Roll_no = int(details['query'])).all() #.filter(Q(sell_no=0) & Q(sell='0'))
-                                return render(request, 'app1/view.html', context={'stock' : stock, 'heading' : 'NOTHING FOUND'}) if len(stock)==0 else render(request, 'app1/view.html', context={'stock' : stock, 'heading' : 'STOCK'})
+                                return render(request, 'app1/view.html', context={'stock' : stock, 'heading' : 'NOTHING FOUND'}) if len(stock)==0 else render(request, 'app1/view.html', context={'stock' : stock, 'heading' : f'STOCK  {(details["query"])}'})
                             except:
                                 return render(request, 'app1/view.html', context={'heading' : 'NOTHING FOUND'})
                         elif (details['choice'] == 'width'):
                             try:
                                 stock = models.stock.objects.filter(width = float(details['query'])).all() #.filter(Q(sell_no=0) & Q(sell='0'))
-                                return render(request, 'app1/view.html', context={'stock' : stock, 'heading' : 'NOTHING FOUND'}) if len(stock)==0 else render(request, 'app1/view.html', context={'stock' : stock, 'heading' : 'STOCK'})
+                                return render(request, 'app1/view.html', context={'stock' : stock, 'heading' : 'NOTHING FOUND'}) if len(stock)==0 else render(request, 'app1/view.html', context={'stock' : stock, 'heading' : f'STOCK  {(details["query"])}'})
                             except:
                                 return render(request, 'app1/view.html', context={'heading' : 'NOTHING FOUND'})
                         elif (details['choice'] == 'customer_number'):
                             stock = models.stock.objects.filter(sell_no__istartswith = int(details['query'])).all()
-                            return render(request, 'app1/view.html', context={'stock' : stock, 'heading' : 'NOTHING FOUND'}) if len(stock)==0 else render(request, 'app1/view.html', context={'stock' : stock, 'heading' : 'STOCK','contentSetting' : True})
+                            return render(request, 'app1/view.html', context={'stock' : stock, 'heading' : 'NOTHING FOUND'}) if len(stock)==0 else render(request, 'app1/view.html', context={'stock' : stock, 'heading' :  f'SALES : {(details["query"])}','contentSetting' : True})
                         elif (details['choice'] == 'customer_name'):
                             try:
                                 stock = models.stock.objects.filter(sell__icontains = str(details['query'])).all()
-                                return render(request, 'app1/view.html', context={'stock' : stock, 'heading' : 'NOTHING FOUND'}) if len(stock)==0 else render(request, 'app1/view.html', context={'stock' : stock, 'heading' : 'STOCK','contentSetting' : True})
+                                return render(request, 'app1/view.html', context={'stock' : stock, 'heading' : 'NOTHING FOUND'}) if len(stock)==0 else render(request, 'app1/view.html', context={'stock' : stock, 'heading' : f'SALES : {(details["query"])}','contentSetting' : True})
                             except:
                                 return render(request, 'app1/view.html', context={'heading' : 'NOTHING FOUND'})
                         elif (details['choice'] == 'item_name'):
                             stock = models.stock.objects.filter(item = (details['query'])).all() #.filter(Q(sell_no=0) & Q(sell='0'))
-                            return render(request, 'app1/view.html', context={'stock' : stock, 'heading' : 'NOTHING FOUND'}) if len(stock)==0 else render(request, 'app1/view.html', context={'stock' : stock, 'heading' : 'STOCK'})
+                            return render(request, 'app1/view.html', context={'stock' : stock, 'heading' : 'NOTHING FOUND'}) if len(stock)==0 else render(request, 'app1/view.html', context={'stock' : stock, 'heading' : f'STOCK  {(details["query"])}'})
                         else:
                             stock = models.stock.objects.all()
                             return render(request, 'app1/view.html', context={'stock' : stock, 'heading' : 'STOCK', 'message' : 'invalid choice.'})
+                if ('itemName' in details):
+                    customer = models.customer.objects.filter(customer_name = str(details['query'])).all()
+                    if (len(customer)==1):
+                        items = request.POST.getlist('itemName');
+                        for x in items:
+                            temp = x.split(',')
+                            stock = models.stock.objects.filter( Q(item = temp[0]) & Q(Roll_no = int(temp[1])) & Q(width = (temp[2])) ).all()
+                            if (len(stock)==1 and stock[0].sell=='0' and stock[0].sell_no==0):
+                                sold = models.Sold(customer_name = customer[0], item_purchase = stock[0], purchase_date = now.today())
+                                sold.save()
+                                stock[0].sell = customer[0].customer_name
+                                stock[0].sell_no = customer[0].customer_phone
+                                stock[0].save()
+                            else:
+                                return render(request, 'app1/view.html', context={'stock' : stock, 'heading' : 'STOCK', 'message' : 'invalid stock.'})
+                        return render(request, 'app1/view.html', context={'heading' : 'CUSTOMER ISSUE'}) if len(customer)==0 else render(request, 'app1/view.html', context={'stock' : stock, 'heading' : f'SALES : {(details["query"])}','contentSetting' : True})
+                        
+                    else:
+                        return render(request, 'app1/view.html', context={'stock' : stock, 'heading' : 'STOCK', 'message' : 'invalid customer.'})
+
                 else:
                     stock = models.stock.objects.all()
                     return render(request, 'app1/view.html', context={'stock' : stock, 'heading' : 'STOCK', 'message' : 'enter valid choice.'})
@@ -144,16 +172,20 @@ def view(request, choice=0):
                 stock = models.stock.objects.filter(sell ='0').all()
                 return render(request, 'app1/view.html', context={'stock' : stock, 'heading' : 'AVAILABLE STOCK'})
         elif choice=='sold':
-            sold = models.Sold.objects.all()
-            if len(sold) == 0:
-                return render(request, 'app1/view.html', context={'sold' : sold, 'heading' : 'NOTHING FOUND'})
-            return render(request, 'app1/view.html', context={'sold' : sold, 'heading' : 'SOLD'})
+            # if (request.method == 'POST'):
+            #         print(request.POST)
+            #         return HttpResponse('hi')
+            # else:
+                sold = models.Sold.objects.all()
+                if len(sold) == 0:
+                    return render(request, 'app1/view.html', context={'sold' : sold, 'heading' : 'NOTHING FOUND'})
+                return render(request, 'app1/view.html', context={'sold' : sold, 'heading' : 'SOLD'})
 
     
         else:
             return render(request, 'app1/view.html', context={'message' : 'nothing to show'})
         
-def sell(request): #changed
+def addsale(request): #changed
     details = request.POST
     print(request.POST)
     print('\n\n', details, '\n\n') 
@@ -164,9 +196,9 @@ def sell(request): #changed
         try:
             stock = models.stock.objects.filter(Q(Roll_no = int(details['Roll_no'])) & Q(item = details['item']) \
                 & Q(width =  int(details['width']))).get()
-            return render(request,'app1/sell.html', context={'message' : stock})
+            return render(request,'app1/addsale.html', context={'message' : stock})
         except:
-            return render(request,'app1/sell.html', context={'message' :'fail except'} )
+            return render(request,'app1/addsale.html', context={'message' :'fail except'} )
     elif(request.method == 'POST' and 'customer_phone' in details):
         details = request.POST
 
@@ -194,15 +226,15 @@ def sell(request): #changed
                 stock.sell = customer.customer_name
                 stock.sell_no = customer.customer_phone
                 stock.save()
-                return render(request,'app1/sell.html', context={'message' :'sold added'})
+                return render(request,'app1/addsale.html', context={'message' :'sold added'})
             else:
-                return render(request,'app1/sell.html', context={'message' :'failed duplicate sold'})
+                return render(request,'app1/addsale.html', context={'message' :'failed duplicate sold'})
         except:
-            return render(request,'app1/sell.html', context={'message' :'fail except'} )
+            return render(request,'app1/addsale.html', context={'message' :'fail except'} )
 
 
     else:
-        return render(request,'app1/sell.html')
+        return render(request,'app1/addsale.html', context={'heading' : "ADD SALE"})
 
 
 
@@ -281,3 +313,74 @@ def item_search(request):
     return JsonResponse({'status' : 200, 'data' : payload})
 
 
+
+
+def editData(request):
+    if(request.method=='POST'):
+        details = request.POST;
+        print(details)
+        try:
+            stock = models.stock.objects.filter(Q(item=details['item']) & Q(width=details['width']) & Q(Roll_no=details['Roll_no'])).all()
+        except:
+            stock=""
+        try:
+            customer = models.customer.objects.filter(customer_phone=details['customer_phone']).all()
+        except:
+            customer=""
+        try:
+            temp = models.Sold.objects.filter(Q(customer_name= customer[0]) & Q(item_purchase=stock[0])).all()
+        except:
+            temp=""
+        if((len(details['sell_date'])!=0 or len(details['short_narration'])!=0) and len(temp)==1):
+            edits=models.Sold.objects.filter(Q(customer_name=customer[0]) & Q(item_purchase=stock[0])).all()[0]
+            if(len(details['sell_date'])!=0):
+                edits.purchase_date = details['sell_date']
+            if(len(details['short_narration'])!=0):
+                edits.short_narration = details['short_narration']
+            edits.save()
+            return render (request,'app1/edit.html', context={'heading' : "DELETE / EDIT DATA", 'message' : 'Edits Done'})
+
+        elif len(stock)==1:
+            if len(customer)==1:
+                if (stock[0].sell_no == (customer[0].customer_phone)):
+                    stock[0].sell_no = 0;
+                    stock[0].sell = '0';
+                    stock[0].save();
+                    edits=models.Sold.objects.filter(Q(customer_name=customer[0]) & Q(item_purchase=stock[0])).all()[0]
+                    edits.delete()
+                    return render (request,'app1/edit.html', context={'heading' : "DELETE / EDIT DATA", 'message' : 'sale deleted'})
+                else:
+                    return render (request,'app1/edit.html', context={'heading' : "DELETE / EDIT DATA", 'message' : 'please enter both info to delete sell correctly.'})
+            else:
+                temp = stock[0]
+                temp1= models.Sold.objects.filter(item_purchase=temp).all() #added later 
+                if (temp.sell_no==0 and temp.sell=='0' and len(temp1)==0):
+                    stock[0].delete()
+                    return render (request,'app1/edit.html', context={'heading' : "DELETE / EDIT DATA", 'message' : 'product deleted.'})
+                else:
+                    return render (request,'app1/edit.html', context={'heading' : "DELETE / EDIT DATA", 'message' : 'delete sales first'})
+
+        elif(len(customer)==1):
+            edits=models.Sold.objects.filter(Q(customer_name=customer[0])).all()
+            if (len(edits)==0):
+                customer[0].delete()
+                return render (request,'app1/edit.html', context={'heading' : "DELETE / EDIT DATA", 'message' : 'cutomer deleted.'})
+            else:
+                return render (request,'app1/edit.html', context={'heading' : "DELETE / EDIT DATA", 'message' : 'please delete sales first.'})
+        else:
+            return render (request,'app1/edit.html', context={'heading' : "DELETE / EDIT DATA", 'message' : 'FAIL'})
+    else:
+        return render (request,'app1/edit.html', context={'heading' : "DELETE / EDIT DATA"})
+
+
+
+
+def getfile(request):  
+    response = HttpResponse(content_type='text/csv')  
+    response['Content-Disposition'] = 'attachment; filename="stock.csv"'  
+    stock = models.stock.objects.all()  
+    writer = csv.writer(response)
+    writer.writerow(['ITEM', 'WIDTH', 'ROLL NO.', 'NET WEIGHT', 'GROSS WEIGHT', 'SOLD PARTY', 'PARTY CONTACT'])  
+    for x in stock:  
+        writer.writerow([x.item,x.width,x.Roll_no,x.Net_wt,x.Gr_wt,x.sell,str(x.sell_no)])  
+    return response  

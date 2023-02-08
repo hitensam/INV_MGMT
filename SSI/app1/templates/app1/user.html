@@ -1,6 +1,9 @@
 {% extends 'app1/base.html' %}
 {% load static %}
 {% block content %}
+{% if heading %}
+        <h1 style="color: rgb(255, 0, 21); text-align: center;">{{heading}}</h1>
+{% endif %}  
         <div class="position-absolute top-50 start-50 translate-middle">
         <div class="modify">
             <form method="post" action="">
