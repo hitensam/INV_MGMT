@@ -27,8 +27,12 @@ SECRET_KEY = 'tp8v6wf^3c=u1qy4j+q59_(pb8$dxozyvm*&xpdrwc!w89d)3p'
 
 # ALLOWED_HOSTS = ['*']
 
+# DEBUG = False
+# ALLOWED_HOSTS = ['127.0.0.1', 'shreeshyamindustries.herokuapp.com']
+
+#for pythonanywhere.com
 DEBUG = False
-ALLOWED_HOSTS = ['127.0.0.1', 'shreeshyamindustries.herokuapp.com']
+ALLOWED_HOSTS = ['hitensam.pythonanywhere.com']
 
 
 # Application definition
