@@ -10,6 +10,7 @@ from .   import  models #customer, Sold, stock
 from django.db.models import Q
 from . import IST_TIME as now
 import csv
+import requests as req
 # import bcrypt
 # Create your views here.
 
@@ -212,19 +213,40 @@ def addsale(request): #changed
             print("\n\n", type(customer),'\n\n')
             if (stock.sell =='0' and stock.sell_no ==0 and customer.customer_phone !=0):
                 print('\n\nentered\n\n')
+                sms_date_send = 0 #added_later
                 if ('sell_date' in details and len(details['sell_date']) != 0):
                     sold = models.Sold(customer_name = customer, item_purchase = stock, purchase_date = str(details['sell_date']))
+                    sms_date_send = str(details['sell_date'])
                     sold.save()
                 else:
                     sold = models.Sold(customer_name = customer, item_purchase = stock, purchase_date = now.today())
+                    sms_date_send=now.today();
                     sold.save()
                 print(sold)
+                customer.customer_phone
+                
                 if('short_narration' in details):
                     sold.short_narration = str(details['short_narration'])
                     sold.save()
                 
                 stock.sell = customer.customer_name
                 stock.sell_no = customer.customer_phone
+                # try:
+                    # message_var = f"Thanks for your purchase of:\n \nItem: {details['item']} \nWidth: {(details['width'])}\nRoll No: {(details['Roll_no'])}\nDATED: {sms_date_send}"
+                    # api_key="UkhTFuP1cLVbGlt0KEvinC9zgap8ZQ37dRXHjMesorJY4NO5WwLEKrV2pGfYCM67oBwmsd8QJ0nAge34"
+                    # url = "https://www.fast2sms.com/dev/bulkV2"
+
+                    # querystring = {"authorization":api_key,"message": message_var,"language":"english","route":"q","numbers":customer.customer_phone}
+
+                    # headers = {
+                    #     'cache-control': "no-cache"
+                    # }
+
+                    # response = req.request("GET", url, headers=headers, params=querystring)
+
+                    # print(response.text)
+                # except:
+                #     print("Message send failed.")
                 stock.save()
                 return render(request,'app1/addsale.html', context={'message' :'sold added'})
             else:
