@@ -17,7 +17,7 @@ urlpatterns = [
     # path('login/', views.login, name='login'),
     path('search/', views.item_search, name="itemSearch"),
     path('editdata/', views.editData, name='editData'),
-    path('getstock/', views.getfile)
+    path('getstock/', views.getfile, name='getStock'),
 ]
 
 # handler404 = 'app1.views.error_404'
