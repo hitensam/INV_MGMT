@@ -25,7 +25,7 @@ SECRET_KEY = 'tp8v6wf^3c=u1qy4j+q59_(pb8$dxozyvm*&xpdrwc!w89d)3p'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1','192.168.1.13']
+ALLOWED_HOSTS = ['127.0.0.1','192.168.1.13', '*']
 
 
 # Application definition
@@ -132,7 +132,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # MEDIA_URL = '/media/'
 
-  
+
 
 # if DEBUG:
 
@@ -142,6 +142,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 #   STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
-  
+
 
 # MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

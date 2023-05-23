@@ -22,17 +22,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'tp8v6wf^3c=u1qy4j+q59_(pb8$dxozyvm*&xpdrwc!w89d)3p'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = True
-
-# ALLOWED_HOSTS = ['*']
-
-# DEBUG = False
-# ALLOWED_HOSTS = ['127.0.0.1', 'shreeshyamindustries.herokuapp.com']
 
 #for pythonanywhere.com
-DEBUG = False
-ALLOWED_HOSTS = ['hitensam.pythonanywhere.com']
+DEBUG = False;
+ALLOWED_HOSTS = ['https://hitensam.pythonanywhere.com'] #// if you are in dev or docker
 
 
 # Application definition
@@ -130,6 +123,4 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
-import django_heroku
-django_heroku.settings(locals())
+DEBUG=False;

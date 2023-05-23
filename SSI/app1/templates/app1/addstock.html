@@ -4,10 +4,12 @@
     form {color: brown; padding: 25px 50px 75px 100px;}
 </style>
 <body>
-  {% if heading %}
-  <h1 style="color: rgb(255, 0, 21); text-align: center;">{{heading}}</h1>
-{% endif %} 
-    <form method="post" action="">  
+        {% if heading %}
+        <div class="top-header">
+        <h1>{{heading}}</h1>
+        </div>
+        {% endif %}
+    <form method="post" action="">
         {% csrf_token %}
         <div class="mb-3 autocomplete" id="autocomplete">
           <label for="text" class="form-label">Item Name</label>
@@ -66,11 +68,11 @@
             {
               console.log(result)
             }
-            
+
         })
 
       </script>
-    
+
     <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" async defer></script> -->
 </body>
 {% endblock %}
