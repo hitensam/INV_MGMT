@@ -1,41 +1,28 @@
 {% extends 'app1/base.html' %}
 {% load static %}
 {% block content %}
-    <style>
-       table {
-  border-collapse: collapse;
-  border-spacing: 0;
-  width: 100%;
-  border: 1px solid #ddd;
-}
-
-th, td {
-  text-align: left;
-  padding: 8px;
-}
-
-tr:nth-child(even){background-color: #f2f2f2}
-    </style>
     <body>
         {% if heading %}
-        <h1 style="color: rgb(255, 0, 21); text-align: center;">{{heading}}</h1>
-        {% endif %}   
+        <div class="top-header">
+        <h1>{{heading}}</h1>
+        </div>
+        {% endif %}
 <div class="container mt-3" style="overflow-x:auto;">
     {% if stock %}
     <form action="" method="post">
         {% csrf_token %}
         <div class="mb-3 autocomplete" id="autocomplete">
-          <label for="text" class="form-label">Please Select Option First</label>
-          <input type="text" class="form-control autocomplete-input" placeholder="QUERY" required name="query" value="" id="item" onblur="myFunction()" id="spaceRemove">
+          <!--<label for="text" class="form-label">Please Select Option First</label>-->
+          <input type="text" class="form-control autocomplete-input" placeholder="QUERY (Please Select Option First)" required name="query" value="" id="item" onblur="myFunction()" id="spaceRemove">
           <ul class="autocomplete-result-list item"></ul>
         </div>
-        <input type="radio" name="choice" value="item_name">Item Name
-        <input type="radio" name="choice" value="roll_no.">Roll No.
-        <input type="radio" name="choice" value="width">Width
-        <input type="radio" name="choice" value="customer_number">Customer Number
-        <input type="radio" name="choice" value="customer_name">Customer Name
-        <input type="radio" name="choice" value="available&sold">Available&Sold
-       
+        <input type="radio" name="choice" value="item_name" class="filter">Item Name
+        <input type="radio" name="choice" value="roll_no."class="filter">Roll No.
+        <input type="radio" name="choice" value="width" class="filter">Width
+        <input type="radio" name="choice" value="customer_number" class="filter">Customer Number
+        <input type="radio" name="choice" value="customer_name" class="filter">Customer Name
+        <input type="radio" name="choice" value="available&sold" class="filter">Available & Sold
+
         <input type="submit"  class="btn btn-primary">
     <!-- </form> -->
     {% endif %}
@@ -49,26 +36,26 @@ tr:nth-child(even){background-color: #f2f2f2}
           {% endif %}
           {% if stock %}
           <th>Serial No.</th>
-          <th>ITEM</th>
-          <th>ROLL NO. </th>
-          <th>WIDTH</th>
-          <th>NET WEIGHT</th>
-          <th>GROSS WEIGHT</th>
-          <th id="soldRemove"onclick="hideShow()">SOLD</th>
-          <th onclick="hideShow()">OPERATION</th>
+          <th>Item</th>
+          <th>Roll No. </th>
+          <th>Width</th>
+          <th>Net Weight</th>
+          <th>Gross Weight</th>
+          <th id="soldRemove"onclick="hideShow()">Status</th>
+          <th hidden >OPERATION</th>
         {% endif %}
 
         {% if sold %}
         <th>Serial No.</th>
-        <th>ITEM</th>
-        <th>ROLL NO. </th>
-        <th>WIDTH</th>
-        <th>NET WEIGHT</th>
-        <th>GROSS WEIGHT</th>
-        <th>DATE</th>
-        <th>CUSTOMER NAME</th>
-        <th>CUSTOMER MOB.</th>
-        <th>SHORT NARRATION</th>
+        <th>Item</th>
+        <th>Roll No.</th>
+        <th>Width</th>
+        <th>Net Weight</th>
+        <th>Gross Weight</th>
+        <th>Date</th>
+        <th>Customer Name</th>
+        <th>Customer Mob.</th>
+        <th>Short Narration</th>
         <!-- <th>NEW COMMENT</th> -->
         {% endif %}
         </tr>
@@ -93,7 +80,7 @@ tr:nth-child(even){background-color: #f2f2f2}
           <td class="net" style="text-align: center;">{{data.Net_wt}}</td>
           <td class="gross" style="text-align: center;">{{data.Gr_wt}}</td>
           <td class="sellStatus">{{data.sell}}</td>
-          <td><div class="form-check">
+          <td hidden><div class="form-check">
             <input class="form-check-input itemName" type="checkbox" value="value1" id="flexCheckChecked" name="itemName">
           </div></td>
         </tr>
@@ -113,7 +100,7 @@ tr:nth-child(even){background-color: #f2f2f2}
         {% csrf_token %}
 
         <input type="submit"  class="btn btn-primary"> -->
-        
+
         {% for data in sold %}
         <tr>
           <th scope="row" class="sno"></th>
@@ -142,7 +129,7 @@ tr:nth-child(even){background-color: #f2f2f2}
   </div>
   <script src="{% static 'app1/modify.js' %}"></script>
   <script>
-  
+
 
   </script>
    </body>

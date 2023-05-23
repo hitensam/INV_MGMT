@@ -5,9 +5,11 @@
     </style>
     <body>
       {% if heading %}
-      <h1 style="color: rgb(255, 0, 21); text-align: center;">{{heading}}</h1>
-{% endif %} 
-        <form method="post" action="">  
+        <div class="top-header">
+        <h1>{{heading}}</h1>
+        </div>
+        {% endif %}
+        <form method="post" action="">
             {% csrf_token %}
             <div class="mb-3">
               <label for="text" class="form-label">Name</label>

@@ -15,15 +15,15 @@ var grossWeight =0;
 
 function myFunction() {
     // alert(document.getElementById("myText").value)
-    document.getElementById("spaceRemove").value = document.getElementById("spaceRemove").value.trim() ;      
+    document.getElementById("spaceRemove").value = document.getElementById("spaceRemove").value.trim() ;
   }
 
 for (var i = 0; i < sno.length; i++ ) { //ele1 -->sno (no issues) both
-    
+
     // setting value for the given name.
     if(getitemName[i] &&  itemName[i]){
     itemName[i].value = [getitemName[i].textContent.trim(), rollNo[i].textContent.trim(), widthSame[i].textContent.trim()]
-    // itemName[i].checked = true 
+    // itemName[i].checked = true
     }
 
     // also adding Sno.
@@ -34,7 +34,7 @@ for (var i = 0; i < sno.length; i++ ) { //ele1 -->sno (no issues) both
     //     document.getElementsByClassName('shortNarration')[i].placeholder = [getitemName[i].textContent.trim(), rollNo[i].textContent.trim(), document.getElementsByClassName('width')[i].textContent.trim()]
     //     console.log( document.getElementsByClassName('shortNarration')[i].pla)
     // }
-    
+
 
     if(net.length>0 && net[i].textContent)
     {
@@ -54,14 +54,14 @@ if (document.getElementsByClassName('netWt')[0])
      grossWeight = grossWeight.toFixed(2)
      // console.log('TOTAL NET WEIGHT : ', netWeight)
      // console.log('TOTAL GROSS WEIGHT : ', grossWeight)
- 
+
      var netWt = document.getElementsByClassName('netWt')[0]
      var Gross = document.getElementsByClassName('Gross')[0]
- 
+
      netWt.textContent = netWeight
-     Gross.textContent = grossWeight 
+     Gross.textContent = grossWeight
 }
-   
+
 
 var netWeight=0;
 var grossWeight =0;
@@ -77,7 +77,7 @@ for (var i = 0; i < sno.length; i++ )
  {
     if (temp === parseFloat(widthSame[i].textContent.trim()))
     {addsellStatus();}
-    
+
 
     else{
         if(document.getElementsByClassName('contentSetting')[0])
@@ -111,7 +111,7 @@ for (var i = 0; i < sno.length; i++ )
         addsellStatus();
         let netWt= parseFloat(net[i].textContent.trim())
         let Gross= parseFloat(gross[i].textContent.trim())
-    
+
         netWeight = netWeight+netWt;
         grossWeight = grossWeight+Gross;
     }
@@ -123,7 +123,7 @@ row.innerHTML = `<td colspan="4" style="text-align: center;">Total SOLD ${temp} 
         <td style="text-align: center;">${netWeight.toFixed(2)}</td>
         <td style="text-align: center;">${grossWeight.toFixed(2)}</td>
         `
-document.getElementsByClassName('addElement')[0].insertBefore(row, document.getElementsByClassName('total')[0])    
+document.getElementsByClassName('addElement')[0].insertBefore(row, document.getElementsByClassName('total')[0])
 }
 else
 {
@@ -156,12 +156,12 @@ function hideShow()
   y = document.getElementById('soldRemove')
     for (var i = 0; i < sno.length; i++ )
     {
-        if (x[i].style.display === "none") 
+        if (x[i].style.display === "none")
         {
             x[i].style.display = "block";
             y.style.display = "block";
-        } 
-        else 
+        }
+        else
         {
         x[i].style.display = "none";
         y.style.display = "none";
@@ -175,7 +175,7 @@ function addsellStatus()
 {
     if (temp === parseFloat(widthSame[i].textContent.trim()))
     {
-    
+
     // if(net.length>0){
         let netWt= parseFloat(net[i].textContent.trim())
         let Gross= parseFloat(gross[i].textContent.trim())
@@ -190,6 +190,7 @@ function addsellStatus()
             {
                 if (parseInt(sellStatus[i].textContent.trim()) === 0)
                 {;
+                    sellStatus[i].textContent = "Available"
                     netWeight = netWeight+netWt;
                     grossWeight = grossWeight+Gross;
 
@@ -203,7 +204,7 @@ function addsellStatus()
                     netGsell = netGsell + Gross;
                 }
         // }
-        
+
             }
     }
 }
@@ -224,7 +225,7 @@ if(document.getElementById('autocomplete'))
             .then(data =>
             {
               console.log(data)
-              
+
               const unique = (value, index, self) => {
               return self.indexOf(value) === index
               }
@@ -238,7 +239,7 @@ if(document.getElementById('autocomplete'))
           {
             console.log(result)
           }
-          
+
       })
 }
 
