@@ -18,6 +18,10 @@ urlpatterns = [
     path('search/', views.item_search, name="itemSearch"),
     path('editdata/', views.editData, name='editData'),
     path('getstock/', views.getfile, name='getStock'),
+     #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+        #Added 23-05-23
+    path('restoredata/', views.restoreData, name='restoreData')
+
 ]
 
 # handler404 = 'app1.views.error_404'
