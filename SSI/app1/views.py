@@ -12,6 +12,7 @@ from . import IST_TIME as now
 import csv
 import requests as req
 import emoji
+import pandas as pd #added 23-05-23
 # import bcrypt
 # Create your views here.
 
@@ -106,7 +107,7 @@ def addStock(request):
             # print('try working')
         except:
             flag = 0
-        if (flag):
+        if (flag==1): #fixed on 26-05-23 but working same as earlier expected when if(flag):
             context = {'heading' : 'Add Stock','message' : 'Details exists already with same item and roll no.'}
             return render(request,'app1/addstock.html', context=context)
         else:
@@ -409,12 +410,96 @@ def editData(request):
 
 
 def getfile(request):
-    if(request.method=='POST'):
-        response = HttpResponse(content_type='text/csv')
-        response['Content-Disposition'] = f'attachment; filename="backup_{now.fileDate()}.csv"'
-        stock = models.stock.objects.all()
-        writer = csv.writer(response)
-        writer.writerow(['ITEM', 'WIDTH', 'ROLL NO.', 'NET WEIGHT', 'GROSS WEIGHT', 'SOLD PARTY', 'PARTY CONTACT'])
-        for x in stock:
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = f'attachment; filename="backup_{now.fileDate()}.csv"'
+    stock = models.stock.objects.all()
+    writer = csv.writer(response)
+    writer.writerow(['ITEM', 'WIDTH', 'ROLL NO.', 'NET WEIGHT', 'GROSS WEIGHT', 'SOLD PARTY', 'PARTY CONTACT', 'PURCHASE DATE'])
+    for x in stock:
+        if(x.sell_no!=0):
+            sold = models.Sold.objects.filter(item_purchase=x).get()
+            writer.writerow([x.item,x.width,x.Roll_no,x.Net_wt,x.Gr_wt,x.sell,str(x.sell_no),sold.purchase_date])
+        else:
             writer.writerow([x.item,x.width,x.Roll_no,x.Net_wt,x.Gr_wt,x.sell,str(x.sell_no)])
-        return response
+    return response
+
+
+#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX#item
+#added on 25-05-2023 (fixed)
+def restoreData(request):
+    if request.method == 'POST' and 'csv_file' in request.FILES:
+        file = request.FILES['csv_file']
+
+        if not file.name.endswith('.csv'):
+            return render(request, 'app1/restoreData.html', context={'heading': 'Restore Data', 'message': 'UPLOADED FILE IS NOT CSV'})
+        else:
+            try:
+                context = {'heading': 'Restore Data', 'message': 'Results: '}
+                file = pd.read_csv(file, encoding='utf-8')
+            except:
+                return render(request, 'app1/restoreData.html', context={'heading': 'Restore Data', 'message': 'Encoding Issue'})
+            l = file.values.tolist()
+            for i in range(len(l)):
+                print('Name : ', l[i][0], " ", 'width ', l[i][1], " ", 'roll : ', l[i][2], " net :", l[i][3], " gross : ", l[i][4])
+                try:
+                    try:
+                        # str(l[i][0])#item
+                        # float(l[i][1])#width
+                        # int(l[i][2])#roll
+                        # float(l[i][3])#Net_wt
+                        # float(l[i][4])#Gr_wt
+                        models.stock.objects.filter(item=l[i][0], width=(l[i][1]), Roll_no=(l[i][2]), Net_wt=(l[i][3]), Gr_wt=(l[i][4]))
+                    except:
+                        context['message'] = context['message'] + f'\\n{i+1} stock error '
+                        context['heading'] = f'Stock {i+1} details error'
+                        return render(request, 'app1/restoreData.html', context=context)
+                    stock = models.stock.objects.filter(item=l[i][0], width=float(l[i][1]), Roll_no=int(l[i][2]), Net_wt=float(l[i][3]), Gr_wt=float(l[i][4])).get()
+                    context['message'] = context['message'] + f'\\n{i+1} exists '
+                except models.stock.DoesNotExist:
+                    stock = models.stock(item=l[i][0], width=float(l[i][1]), Roll_no=int(l[i][2]), Net_wt=float(l[i][3]), Gr_wt=float(l[i][4]))
+                    stock.save()
+                    context['message'] = context['message'] + f'\\n{i+1} added '
+                if (len(l[i])==8):
+                    try:
+                            l[i][6] = int(l[i][6])
+                            l[i][7]=str(l[i][7])
+                            l[i][7] = l[i][7][6:10]+l[i][7][2:6]+l[i][7][0:2]
+                            if(l[i][6]!=0 and len(str(l[i][6]))!=10):
+                                context['heading'] = f'Customer num {i+1} less than 10 digits'
+                                context['message'] = context['message'] + f'\\n{i+1} error'
+                                return render(request, 'app1/restoreData.html', context=context)
+                    except:
+                            context['heading'] = f'Customer num/date {i+1} error'
+                            context['message'] = context['message'] + f'\\n{i+1} error'
+                            return render(request, 'app1/restoreData.html', context=context)
+                    if str(l[i][5]) != '0' and l[i][6] != 0 and l[i][7] != '':
+                            existingCustomer = models.customer.objects.filter(customer_phone=int(l[i][6]))
+                            if not existingCustomer:
+                                    existingCustomer = models.customer(customer_name=l[i][5], customer_phone=l[i][6])
+                                    existingCustomer.save()
+                            else:
+                                existingCustomer=existingCustomer.get()
+                            try:
+                                    sold = models.Sold.objects.filter(item_purchase=stock).get()
+                                    context['heading'] = f'Sold exists {i+1} error'
+                                    context['message'] = context['message'] + f'\\n{i+1} duplicate sold error'
+                                    return render(request, 'app1/restoreData.html', context=context)
+                            except models.Sold.DoesNotExist:
+                                # context['message'] = context['message'] + f'models.Sold'
+                                try:
+                                            # context['message'] = context['message'] + f'entered try'
+                                            sold = models.Sold(customer_name=existingCustomer, item_purchase=stock, purchase_date=(l[i][7]))
+
+                                            sold.save()
+                                            stock.sell = existingCustomer.customer_name
+                                            stock.sell_no = existingCustomer.customer_phone
+                                            stock.save()
+                                            context['message'] = context['message'] + f'sold added'
+                                except:
+                                            context['heading'] = f"DATE NOT IN YYYY-MM-DD Format: {i+1}"
+                                            return render(request, 'app1/restoreData.html', context=context)
+
+        return render(request, 'app1/restoreData.html', context=context)
+    else:
+        context={'heading' : "Restore Data", 'message':"UPLOAD CSV FILE ONLY."}
+        return render(request, 'app1/restoreData.html', context=context)

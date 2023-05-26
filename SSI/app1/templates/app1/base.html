@@ -17,6 +17,10 @@
         <script src="{% static 'app1/autocomplete.min.js' %}"></script>
         <link rel="stylesheet" href="{% static 'app1/bootstrap.min.css' %}">
         <link rel="stylesheet" href="{% static 'app1/autocompletestyle.css' %}">
+                <!--Added 24 - 05- 2023-->
+        <link rel="stylesheet" href="{% static 'app1/loading.css' %}">
+
+
           <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@700&display=swap" rel="stylesheet">
@@ -30,6 +34,11 @@
                  {% csrf_token %}
      <button type="submit" onclick="">Backup Data</button>
      </form>
+     <!--Added on 23-05-23-->
+     <form style="display: inline;margin-left: 0.5rem;"action="{% url 'app1:restoreData' %}" method="post">
+      {% csrf_token %}
+<button type="submit" onclick="">Restore Data</button>
+</form>
 <ul class="dropdown-menu">
 
     <li><a class="dropdown-item" href="/view/stock">Stock</a></li>
