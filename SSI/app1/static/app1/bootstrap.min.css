@@ -394,17 +394,11 @@ select:disabled {
   display: none
 }
 
-[type=button],
-[type=reset],
-[type=submit],
-button {
+[type=button], [type=reset], [type=submit], button {
   -webkit-appearance: button
 }
 
-[type=button]:not(:disabled),
-[type=reset]:not(:disabled),
-[type=submit]:not(:disabled),
-button:not(:disabled) {
+[type=button]:not(:disabled), [type=reset]:not(:disabled), [type=submit]:not(:disabled), button:not(:disabled) {
   cursor: pointer
 }
 
@@ -2590,7 +2584,7 @@ textarea.form-control-lg {
   -moz-appearance: none;
   appearance: none;
   -webkit-print-color-adjust: exact;
-  color-adjust: exact
+  print-color-adjust: exact
 }
 
 .form-check-input[type=checkbox] {
