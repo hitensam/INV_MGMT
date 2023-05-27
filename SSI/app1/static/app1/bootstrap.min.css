@@ -12238,7 +12238,9 @@ table * {
 }
 
 .infoForms {
-  padding: 25px 50px 75px 100px;
+  margin: 10px 75px 75px;
+  padding: 2rem 2rem 1rem;
+  border: 2px solid #f2f2f2;
 }
 
 /* base.html */
