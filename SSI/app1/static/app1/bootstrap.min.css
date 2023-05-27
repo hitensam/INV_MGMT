@@ -394,17 +394,11 @@ select:disabled {
   display: none
 }
 
-[type=button],
-[type=reset],
-[type=submit],
-button {
+[type=button], [type=reset], [type=submit], button {
   -webkit-appearance: button
 }
 
-[type=button]:not(:disabled),
-[type=reset]:not(:disabled),
-[type=submit]:not(:disabled),
-button:not(:disabled) {
+[type=button]:not(:disabled), [type=reset]:not(:disabled), [type=submit]:not(:disabled), button:not(:disabled) {
   cursor: pointer
 }
 
@@ -2590,7 +2584,7 @@ textarea.form-control-lg {
   -moz-appearance: none;
   appearance: none;
   -webkit-print-color-adjust: exact;
-  color-adjust: exact
+  print-color-adjust: exact
 }
 
 .form-check-input[type=checkbox] {
@@ -12168,7 +12162,7 @@ fieldset:disabled .btn {
   }
 }
 
-/* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
+/* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
 
 * {
   /* font-family: 'Fredoka', sans-serif; */
@@ -12241,5 +12235,18 @@ table * {
   margin-right: 0;
   margin-top: 1rem;
   margin-left: 0.5rem;;
+}
+
+.infoForms {
+  margin: 10px 75px 75px;
+  padding: 2rem 2rem 1rem;
+  border: 2px solid #f2f2f2;
+}
+
+/* base.html */
+
+.baseForm {
+  display: inline;
+  margin-left: 0.5rem;
 }
 /*# sourceMappingURL=bootstrap.min.css.map */
