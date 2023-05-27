@@ -12168,7 +12168,7 @@ fieldset:disabled .btn {
   }
 }
 
-/* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
+/* XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX */
 
 * {
   /* font-family: 'Fredoka', sans-serif; */
@@ -12241,5 +12241,16 @@ table * {
   margin-right: 0;
   margin-top: 1rem;
   margin-left: 0.5rem;;
+}
+
+.infoForms {
+  padding: 25px 50px 75px 100px;
+}
+
+/* base.html */
+
+.baseForm {
+  display: inline;
+  margin-left: 0.5rem;
 }
 /*# sourceMappingURL=bootstrap.min.css.map */

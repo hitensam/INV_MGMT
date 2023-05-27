@@ -1,16 +1,12 @@
 {% extends 'app1/base.html' %}
 {% block content %}
-<style>
-    form {color: brown; padding: 25px 50px 75px 100px;}
-
-</style>
 <body>
     {% if heading %}
         <div class="top-header">
         <h1>{{heading}}</h1>
         </div>
         {% endif %}
-    <form method="post" action="">
+    <form class="infoForms" method="post" action="">
         {% csrf_token %}
         <div class="mb-3 autocomplete" id="autocomplete">
           <label for="text" class="form-label">Item Name</label>
@@ -24,26 +20,26 @@
         </div>
         <div class="mb-3 autocomplete" id="autocomplete2">
             <label for="text" class="form-label">Roll No.</label>
-            <input id = "Roll_no" type="number" class="form-control autocomplete-input" placeholder="NUMERIC ONLY" name="Roll_no" value="" required onblur="show()">
+            <input id = "Roll_no" type="number" class="form-control autocomplete-input" placeholder="Numeric Only" name="Roll_no" value="" required onblur="show()">
             <ul class="autocomplete-result-list roll"></ul>
         </div>
         <div class="mb-3 autocomplete" id="autocomplete3">
             <label for="text" class="form-label">Party Name</label>
-            <input type="text" class="form-control autocomplete-input" placeholder="PARTY NAME" value="" id="party_name" onblur="getCustomerPhone()">
+            <input type="text" class="form-control autocomplete-input" placeholder="Party Name" value="" id="party_name" onblur="getCustomerPhone()">
             <ul class="autocomplete-result-list "></ul>
         </div>
         <div class="mb-3">
           <label for="text" class="form-label">Party Contact</label>
-          <input type="text" class="form-control" placeholder="PARTY CONTACT" name="customer_phone" value="" id="party_phone" onblur="checkUndefined()">
+          <input type="text" class="form-control" placeholder="Party Contact" name="customer_phone" value="" id="party_phone" onblur="checkUndefined()">
           <ul class="autocomplete-result-list"></ul>
       </div>
         <div class="mb-3">
             <label for="text" class="form-label">Date</label>
-            <input type="date" class="form-control" placeholder="NUMERIC ONLY" name="sell_date" value="" >
+            <input type="date" class="form-control" placeholder="Numeric Only" name="sell_date" value="" >
         </div>
         <div class="mb-3">
             <label for="text" class="form-label">Short Narration</label>
-            <input type="text" class="form-control" placeholder="NUMERIC ONLY" name="short_narration" value="" onblur="checkLength1()" id="short_narration" required>
+            <input type="text" class="form-control" placeholder="Numeric Only" name="short_narration" value="" onblur="checkLength1()" id="short_narration" required>
         </div>
           <!-- <br> -->
           <br>

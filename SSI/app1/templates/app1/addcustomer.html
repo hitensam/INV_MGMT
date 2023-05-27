@@ -1,15 +1,12 @@
 {% extends 'app1/base.html' %}
 {% block content %}
-    <style>
-        form {color: brown; padding: 25px 50px 75px 100px;}
-    </style>
     <body>
       {% if heading %}
         <div class="top-header">
         <h1>{{heading}}</h1>
         </div>
         {% endif %}
-        <form method="post" action="">
+        <form class="infoForms" method="post" action="">
             {% csrf_token %}
             <div class="mb-3">
               <label for="text" class="form-label">Name</label>
