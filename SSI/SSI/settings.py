@@ -26,7 +26,7 @@ SECRET_KEY = 'tp8v6wf^3c=u1qy4j+q59_(pb8$dxozyvm*&xpdrwc!w89d)3p'
 DEBUG = os.getenv('DEBUG', False) == 'True'
 
 
-# DEBUG = bool(True)
+# DEBUG = bool(False) #Enable when in debug mode.
 
 ALLOWED_HOSTS = ['https://hitensam.pythonanywhere.com'] 
 
@@ -130,25 +130,3 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-
-# import django_heroku
-# django_heroku.settings(locals())
-
-# STATIC_URL = '/static/'
-
-# MEDIA_URL = '/media/'
-
-
-
-# if DEBUG:
-
-#   STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
-
-# else:
-
-#   STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-
-
-
-# MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
