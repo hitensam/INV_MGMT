@@ -129,31 +129,31 @@ def view(request, choice=0):
                 if ('choice' in details):
                         if (details['choice'] == 'available&sold'): #changed
                             stock = models.stock.objects.all()
-                            return render(request, 'app1/view.html', context={'stock' : stock, 'heading' : 'NOTHING FOUND'}) if len(stock)==0 else render(request, 'app1/view.html', context={'stock' : stock, 'heading' : 'Stock Available & Sold'})
+                            return render(request, 'app1/view.html', context={'stock' : stock, 'heading' : 'NOTHING FOUND'}) if len(stock)==0 else render(request, 'app1/view.html', context={'stock' : stock, 'heading' : 'Stock Available & Sold', 'choice':details['choice']})
                         elif (details['choice'] == 'roll_no.'):
                             try:
                                 stock = models.stock.objects.filter(Roll_no = int(details['query'])).all() #.filter(Q(sell_no=0) & Q(sell='0'))
-                                return render(request, 'app1/view.html', context={'stock' : stock, 'heading' : 'NOTHING FOUND'}) if len(stock)==0 else render(request, 'app1/view.html', context={'stock' : stock, 'heading' : f'Stock: {(details["query"])}'})
+                                return render(request, 'app1/view.html', context={'stock' : stock, 'heading' : 'NOTHING FOUND'}) if len(stock)==0 else render(request, 'app1/view.html', context={'stock' : stock, 'heading' : f'Stock: {(details["query"])}', 'choice':details['choice'], 'value':details['query']})
                             except:
                                 return render(request, 'app1/view.html', context={'heading' : 'NOTHING FOUND'})
                         elif (details['choice'] == 'width'):
                             try:
                                 stock = models.stock.objects.filter(width = float(details['query'])).all() #.filter(Q(sell_no=0) & Q(sell='0'))
-                                return render(request, 'app1/view.html', context={'stock' : stock, 'heading' : 'NOTHING FOUND'}) if len(stock)==0 else render(request, 'app1/view.html', context={'stock' : stock, 'heading' : f'Stock: {(details["query"])}'})
+                                return render(request, 'app1/view.html', context={'stock' : stock, 'heading' : 'NOTHING FOUND'}) if len(stock)==0 else render(request, 'app1/view.html', context={'stock' : stock, 'heading' : f'Stock: {(details["query"])}', 'choice':details['choice'], 'value':details['query']})
                             except:
                                 return render(request, 'app1/view.html', context={'heading' : 'NOTHING FOUND'})
                         elif (details['choice'] == 'customer_number'):
                             stock = models.stock.objects.filter(sell_no__istartswith = int(details['query'])).all()
-                            return render(request, 'app1/view.html', context={'stock' : stock, 'heading' : 'NOTHING FOUND'}) if len(stock)==0 else render(request, 'app1/view.html', context={'stock' : stock, 'heading' :  f'Sales: {(details["query"])}','contentSetting' : True})
+                            return render(request, 'app1/view.html', context={'stock' : stock, 'heading' : 'NOTHING FOUND'}) if len(stock)==0 else render(request, 'app1/view.html', context={'stock' : stock, 'heading' :  f'Sales: {(details["query"])}','contentSetting' : True, 'choice':details['choice'], 'value':details['query']})
                         elif (details['choice'] == 'customer_name'):
                             try:
                                 stock = models.stock.objects.filter(sell__icontains = str(details['query'])).all()
-                                return render(request, 'app1/view.html', context={'stock' : stock, 'heading' : 'NOTHING FOUND'}) if len(stock)==0 else render(request, 'app1/view.html', context={'stock' : stock, 'heading' : f'Sales: {(details["query"])}','contentSetting' : True})
+                                return render(request, 'app1/view.html', context={'stock' : stock, 'heading' : 'NOTHING FOUND'}) if len(stock)==0 else render(request, 'app1/view.html', context={'stock' : stock, 'heading' : f'Sales: {(details["query"])}','contentSetting' : True, 'choice':details['choice'], 'value':details['query']})
                             except:
                                 return render(request, 'app1/view.html', context={'heading' : 'NOTHING FOUND'})
                         elif (details['choice'] == 'item_name'):
                             stock = models.stock.objects.filter(item = (details['query'])).all() #.filter(Q(sell_no=0) & Q(sell='0'))
-                            return render(request, 'app1/view.html', context={'stock' : stock, 'heading' : 'NOTHING FOUND'}) if len(stock)==0 else render(request, 'app1/view.html', context={'stock' : stock, 'heading' : f'Stock: {(details["query"])}'})
+                            return render(request, 'app1/view.html', context={'stock' : stock, 'heading' : 'NOTHING FOUND'}) if len(stock)==0 else render(request, 'app1/view.html', context={'stock' : stock, 'heading' : f'Stock: {(details["query"])}', 'choice':details['choice'], 'value':details['query']})
                         else:
                             stock = models.stock.objects.all()
                             return render(request, 'app1/view.html', context={'stock' : stock, 'heading' : 'Stock', 'message' : 'Invalid Choice.'})
@@ -172,7 +172,7 @@ def view(request, choice=0):
                                 stock[0].save()
                             else:
                                 return render(request, 'app1/view.html', context={'stock' : stock, 'heading' : 'STOCK', 'message' : 'invalid stock.'})
-                        return render(request, 'app1/view.html', context={'heading' : 'CUSTOMER ISSUE'}) if len(customer)==0 else render(request, 'app1/view.html', context={'stock' : stock, 'heading' : f'Sales : {(details["query"])}','contentSetting' : True})
+                        return render(request, 'app1/view.html', context={'heading' : 'CUSTOMER ISSUE'}) if len(customer)==0 else render(request, 'app1/view.html', context={'stock' : stock, 'heading' : f'Sales : {(details["query"])}','contentSetting' : True, 'choice':details['choice'], 'value':details['query']})
 
                     else:
                         return render(request, 'app1/view.html', context={'stock' : stock, 'heading' : 'Stock', 'message' : 'Invalid Customer.'})
@@ -409,13 +409,29 @@ def editData(request):
 
 
 
-def getfile(request):
+def getfile(request,choice=0,value=0):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = f'attachment; filename="backup_{now.fileDate()}.csv"'
-    stock = models.stock.objects.all()
+    output = models.stock.objects.all()
+    if(choice):
+        if(choice=='roll_no.'):
+            output = models.stock.objects.filter(Roll_no = int(value)).all()
+            response['Content-Disposition'] = f'attachment; filename="Roll_no:_{value}_{now.fileDate()}.csv"'
+        if(choice=='item_name'):
+            output = models.stock.objects.filter(item = value).all()
+            response['Content-Disposition'] = f'attachment; filename="Item:_{value}_{now.fileDate()}.csv"'
+        if(choice=='width'):
+            output = models.stock.objects.filter(width = int(value)).all()
+            response['Content-Disposition'] = f'attachment; filename="Width:_{value}_{now.fileDate()}.csv"'
+        if(choice=='customer_number'):
+            output = models.stock.objects.filter(sell_no = int(value)).all()
+            response['Content-Disposition'] = f'attachment; filename="CustomerNum:_{value}_{now.fileDate()}.csv"'
+        if(choice=='customer_name'):
+            output = models.stock.objects.filter(sell = (value)).all()
+            response['Content-Disposition'] = f'attachment; filename="CustomerName:_{value}_{now.fileDate()}.csv"'
     writer = csv.writer(response)
     writer.writerow(['ITEM', 'WIDTH', 'ROLL NO.', 'NET WEIGHT', 'GROSS WEIGHT', 'SOLD PARTY', 'PARTY CONTACT', 'PURCHASE DATE'])
-    for x in stock:
+    for x in output:
         if(x.sell_no!=0):
             sold = models.Sold.objects.filter(item_purchase=x).get()
             writer.writerow([x.item,x.width,x.Roll_no,x.Net_wt,x.Gr_wt,x.sell,str(x.sell_no),sold.purchase_date])
@@ -440,64 +456,87 @@ def restoreData(request):
                 return render(request, 'app1/restoreData.html', context={'heading': 'Restore Data', 'message': 'Encoding Issue'})
             l = file.values.tolist()
             for i in range(len(l)):
-                print('Name : ', l[i][0], " ", 'width ', l[i][1], " ", 'roll : ', l[i][2], " net :", l[i][3], " gross : ", l[i][4])
-                try:
+                if(len(l[i])==2):
                     try:
-                        # str(l[i][0])#item
-                        # float(l[i][1])#width
-                        # int(l[i][2])#roll
-                        # float(l[i][3])#Net_wt
-                        # float(l[i][4])#Gr_wt
-                        models.stock.objects.filter(item=l[i][0], width=(l[i][1]), Roll_no=(l[i][2]), Net_wt=(l[i][3]), Gr_wt=(l[i][4]))
-                    except:
-                        context['message'] = context['message'] + f'\\n{i+1} stock error '
-                        context['heading'] = f'Stock {i+1} details error'
-                        return render(request, 'app1/restoreData.html', context=context)
-                    stock = models.stock.objects.filter(item=l[i][0], width=float(l[i][1]), Roll_no=int(l[i][2]), Net_wt=float(l[i][3]), Gr_wt=float(l[i][4])).get()
-                    context['message'] = context['message'] + f'\\n{i+1} exists '
-                except models.stock.DoesNotExist:
-                    stock = models.stock(item=l[i][0], width=float(l[i][1]), Roll_no=int(l[i][2]), Net_wt=float(l[i][3]), Gr_wt=float(l[i][4]))
-                    stock.save()
-                    context['message'] = context['message'] + f'\\n{i+1} added '
-                if (len(l[i])==8):
-                    try:
-                            l[i][6] = int(l[i][6])
-                            l[i][7]=str(l[i][7])
-                            l[i][7] = l[i][7][6:10]+l[i][7][2:6]+l[i][7][0:2]
-                            if(l[i][6]!=0 and len(str(l[i][6]))!=10):
+                        l[i][0] = str(l[i][0]);
+                        l[i][1] = int(l[i][1])
+                        if(l[i][1]!=0 and len(str(l[i][1]))!=10):
                                 context['heading'] = f'Customer num {i+1} less than 10 digits'
                                 context['message'] = context['message'] + f'\\n{i+1} error'
                                 return render(request, 'app1/restoreData.html', context=context)
-                    except:
-                            context['heading'] = f'Customer num/date {i+1} error'
-                            context['message'] = context['message'] + f'\\n{i+1} error'
-                            return render(request, 'app1/restoreData.html', context=context)
-                    if str(l[i][5]) != '0' and l[i][6] != 0 and l[i][7] != '':
-                            existingCustomer = models.customer.objects.filter(customer_phone=int(l[i][6]))
-                            if not existingCustomer:
-                                    existingCustomer = models.customer(customer_name=l[i][5], customer_phone=l[i][6])
+                        existingCustomer = models.customer.objects.filter(Q(customer_name=(l[i][0]))|Q(customer_phone=int(l[i][1])))
+                        if not existingCustomer:
+                                    existingCustomer = models.customer(customer_name=l[i][0], customer_phone=l[i][1])
                                     existingCustomer.save()
-                            else:
-                                existingCustomer=existingCustomer.get()
-                            try:
-                                    sold = models.Sold.objects.filter(item_purchase=stock).get()
-                                    context['heading'] = f'Sold exists {i+1} error'
-                                    context['message'] = context['message'] + f'\\n{i+1} duplicate sold error'
-                                    return render(request, 'app1/restoreData.html', context=context)
-                            except models.Sold.DoesNotExist:
-                                # context['message'] = context['message'] + f'models.Sold'
-                                try:
-                                            # context['message'] = context['message'] + f'entered try'
-                                            sold = models.Sold(customer_name=existingCustomer, item_purchase=stock, purchase_date=(l[i][7]))
+                                    context['message'] = context['message'] + f'\\n{i+1} added'
 
-                                            sold.save()
-                                            stock.sell = existingCustomer.customer_name
-                                            stock.sell_no = existingCustomer.customer_phone
-                                            stock.save()
-                                            context['message'] = context['message'] + f'sold added'
-                                except:
-                                            context['heading'] = f"DATE NOT IN YYYY-MM-DD Format: {i+1}"
-                                            return render(request, 'app1/restoreData.html', context=context)
+                        else:
+                            context['message'] = context['message'] + f'\\n{i+1} already exists'
+
+                    except:
+                        context['heading'] = f'Customer details {i+1} issue.'
+                        context['message'] = context['message'] + f'\\n{i+1} error'
+                        return render(request, 'app1/restoreData.html', context=context) 
+                
+                else:    
+                # print('Name : ', l[i][0], " ", 'width ', l[i][1], " ", 'roll : ', l[i][2], " net :", l[i][3], " gross : ", l[i][4])
+                    try:
+                        try:
+                            # str(l[i][0])#item
+                            # float(l[i][1])#width
+                            # int(l[i][2])#roll
+                            # float(l[i][3])#Net_wt
+                            # float(l[i][4])#Gr_wt
+                            models.stock.objects.filter(item=l[i][0], width=(l[i][1]), Roll_no=(l[i][2]), Net_wt=(l[i][3]), Gr_wt=(l[i][4]))
+                        except:
+                            context['message'] = context['message'] + f'\\n{i+1} stock error '
+                            context['heading'] = f'Stock {i+1} details error'
+                            return render(request, 'app1/restoreData.html', context=context)
+                        stock = models.stock.objects.filter(item=l[i][0], width=float(l[i][1]), Roll_no=int(l[i][2]), Net_wt=float(l[i][3]), Gr_wt=float(l[i][4])).get()
+                        context['message'] = context['message'] + f'\\n{i+1} exists '
+                    except models.stock.DoesNotExist:
+                        stock = models.stock(item=l[i][0], width=float(l[i][1]), Roll_no=int(l[i][2]), Net_wt=float(l[i][3]), Gr_wt=float(l[i][4]))
+                        stock.save()
+                        context['message'] = context['message'] + f'\\n{i+1} added '
+                    if (len(l[i])==8):
+                        try:
+                                l[i][6] = int(l[i][6])
+                                l[i][7]=str(l[i][7])
+                                l[i][7] = l[i][7][6:10]+l[i][7][2:6]+l[i][7][0:2]
+                                if(l[i][6]!=0 and len(str(l[i][6]))!=10):
+                                    context['heading'] = f'Customer num {i+1} less than 10 digits'
+                                    context['message'] = context['message'] + f'\\n{i+1} error'
+                                    return render(request, 'app1/restoreData.html', context=context)
+                        except:
+                                context['heading'] = f'Customer num/date {i+1} error'
+                                context['message'] = context['message'] + f'\\n{i+1} error'
+                                return render(request, 'app1/restoreData.html', context=context)
+                        if str(l[i][5]) != '0' and l[i][6] != 0 and l[i][7] != '':
+                                existingCustomer = models.customer.objects.filter(customer_name=(l[i][5]))
+                                if not existingCustomer:
+                                        existingCustomer = models.customer(customer_name=l[i][5], customer_phone=l[i][6])
+                                        existingCustomer.save()
+                                else:
+                                    existingCustomer=existingCustomer.get()
+                                try:
+                                        sold = models.Sold.objects.filter(item_purchase=stock).get()
+                                        context['heading'] = f'Sold exists {i+1} error'
+                                        context['message'] = context['message'] + f'\\n{i+1} duplicate sold error'
+                                        return render(request, 'app1/restoreData.html', context=context)
+                                except models.Sold.DoesNotExist:
+                                    # context['message'] = context['message'] + f'models.Sold'
+                                    try:
+                                                # context['message'] = context['message'] + f'entered try'
+                                                sold = models.Sold(customer_name=existingCustomer, item_purchase=stock, purchase_date=(l[i][7]))
+
+                                                sold.save()
+                                                stock.sell = existingCustomer.customer_name
+                                                stock.sell_no = existingCustomer.customer_phone
+                                                stock.save()
+                                                context['message'] = context['message'] + f'sold added'
+                                    except:
+                                                context['heading'] = f"DATE NOT IN YYYY-MM-DD Format: {i+1}"
+                                                return render(request, 'app1/restoreData.html', context=context)
 
         return render(request, 'app1/restoreData.html', context=context)
     else:
