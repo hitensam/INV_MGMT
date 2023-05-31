@@ -535,7 +535,7 @@ def restoreData(request):
                                                 stock.save()
                                                 context['message'] = context['message'] + f'sold added'
                                     except:
-                                                context['heading'] = f"DATE NOT IN YYYY-MM-DD Format: {i+1}"
+                                                context['heading'] = f"DATE NOT IN DD-MM-YYYY Format: {i+1}"
                                                 return render(request, 'app1/restoreData.html', context=context)
 
         return render(request, 'app1/restoreData.html', context=context)
