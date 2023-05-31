@@ -28,7 +28,7 @@
     aria-expanded="false">
     Menu
   </button>
-  <form class="baseForm" action="{% url 'app1:getStock' %}" method="post">
+  <form class="baseForm" action="{% url 'app1:getStock' choice=0 value=0%}" method="post">
     {% csrf_token %}
     <button type="submit" onclick="">Backup Data</button>
   </form>
@@ -40,9 +40,9 @@
   </form>
 
   <ul class="dropdown-menu">
-    <li><a class="dropdown-item" href="/view/stock">Stock</a></li>
-    <li><a class="dropdown-item" href="/view/sold">Sold</a></li>
-    <li><a class="dropdown-item" href="/view/customer">Customer</a></li>
+    <li><a class="dropdown-item" href="{% url 'app1:view' choice='stock' %}">Stock</a></li>
+    <li><a class="dropdown-item" href="{% url 'app1:view' choice='sold' %}">Sold</a></li>
+    <li><a class="dropdown-item" href="{% url 'app1:view' choice='customer' %}">Customer</a></li>
     <li><a class="dropdown-item" href="{% url 'app1:sell' %}">Add Sale</a></li>
     <li><a class="dropdown-item" href="{% url 'app1:addstock' %}">Add Stock</a></li>
     <li><a class="dropdown-item" href="{% url 'app1:addcustomer' %}">Add Customer</a></li>

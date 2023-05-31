@@ -1,5 +1,4 @@
-
-import datetime; # print("\n")
+import datetime
 
 INDIA_TIME = datetime.datetime.utcnow() + datetime.timedelta(hours=5, minutes=30) #Adding 5:30 hrs to UCT Time
 
@@ -14,5 +13,4 @@ def fileDate():
     # datetime.datetime.strftime(INDIA_TIME,"%Y-%m-%d")  #Date of Issue
     # issue = datetime.datetime.strptime(issue,"%d %B %Y")   
     return (datetime.datetime.strftime(INDIA_TIME,"%d-%m-%Y"))
-# print(today())
-# print(datetime.date(2022, 9, 11))
+
