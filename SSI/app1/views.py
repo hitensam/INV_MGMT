@@ -202,22 +202,23 @@ def addsale(request): #changed
     print(request.POST)
     print('\n\n', details, '\n\n')
     # print(len(details['customer_phone']))
-    if (request.method == 'POST' and 'Roll_no' in details and 'item' in details and 'width' in details and len(details['customer_phone']) ==0):
-        details = request.POST
-        #
-        try:
-            stock = models.stock.objects.filter(Q(Roll_no = int(details['Roll_no'])) & Q(item = details['item']) \
-                & Q(width =  int(details['width']))).get()
-            return render(request,'app1/addsale.html', context={'heading' : "Add Sale",'message' : stock})
-        except:
-            return render(request,'app1/addsale.html', context={'heading' : "Add Sale",'message' :'Fail except (ADD SALE)'} )
-    elif(request.method == 'POST' and 'customer_phone' in details):
+    # if (request.method == 'POST' and 'Roll_no' in details and 'item' in details and 'width' in details and len(details['customer_phone']) ==0):
+    #     details = request.POST
+    #     #
+    #     try:
+    #         stock = models.stock.objects.filter(Q(Roll_no = int(details['Roll_no'])) & Q(item = details['item']) \
+    #             & Q(width =  int(details['width']))).get()
+    #         return render(request,'app1/addsale.html', context={'heading' : "Add Sale",'message' : stock})
+    #     except:
+    #         return render(request,'app1/addsale.html', context={'heading' : "Add Sale",'message' :'Fail except (ADD SALE)'} )
+    if(request.method == 'POST' and 'customer_phone' in details):
         details = request.POST
 
         #
         try:
+        # if True:
             stock = models.stock.objects.filter(Q(Roll_no = int(details['Roll_no'])) & Q(item = details['item']) \
-                & Q(width =  int(details['width']))).get()
+                & Q(width =  (details['width']))).get() #removed INT 01-06-2023
             customer = models.customer.objects.filter(customer_phone = int(details['customer_phone'])).get()
             print("\n\n", stock,'\n\n')
             print("\n\n", customer,'\n\n')
@@ -262,13 +263,17 @@ def addsale(request): #changed
                 stock.save()
                 return render(request,'app1/addsale.html', context={'heading' : "Add Sale",'message' :'Sold Added'})
             else:
-                return render(request,'app1/addsale.html', context={'heading' : "Add Sale",'message' :'Failed duplicate sold'})
+                return render(request,'app1/addsale.html', context={'heading' : "Add Sale",'message' :'Failed, Duplicate Sold'})
         except:
-            return render(request,'app1/addsale.html', context={'heading' : "Add Sale",'message' :'Fail Except'} )
+            return render(request,'app1/addsale.html', context={'heading' : "Add Sale",'message' :'Fail, Exception Occurred'} )
 
 
     else:
-        return render(request,'app1/addsale.html', context={'heading' : "Add Sale"})
+        context={'heading' : "Add Sale", 'message':""}
+        GET=request.GET;
+        if('param1' in GET):
+            context['message']= GET['param1']
+        return render(request,'app1/addsale.html', context=context)
 
 
 
@@ -542,3 +547,31 @@ def restoreData(request):
     else:
         context={'heading' : "Restore Data", 'message':"UPLOAD CSV FILE ONLY."}
         return render(request, 'app1/restoreData.html', context=context)
+    
+
+
+
+def getInfo(request, item=0,width=0,rollNo=0):
+            #  models.stock(item = details['item'], width = float(details['width']), Roll_no = int(details['Roll_no']), Net_wt = float(details['Net_wt']), Gr_wt = float(details['Gr_wt']))
+    if(request.method=="GET"):
+        context={'heading':'Info/Add Sale', 'message':''}
+        try:
+            findStock = models.stock.objects.filter(item=item, width=width, Roll_no=rollNo).get()
+            context.update({'findStock' : findStock})
+            if (findStock.sell=="0" and findStock.sell_no==0):
+                    return render(request,'app1/addsale.html', context=context)
+            else:
+                findSoldStock = models.Sold.objects.filter(item_purchase=findStock).get()
+                context.update({'findSoldStock' : findSoldStock})
+                context['message'] = "Already Sold."
+                return render(request,'app1/addsale.html', context=context)
+
+        except:
+            context['message'] = "Stock with given info does not exist."
+            return redirect('/addsale/?param1={}'.format(context['message']))
+    
+
+
+
+    else:
+        return redirect('/addsale/?param1={}'.format('Invalid URL'))

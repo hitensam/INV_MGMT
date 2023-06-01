@@ -7,19 +7,20 @@ app_name = 'app1'
 
 urlpatterns = [
     path('', RedirectView.as_view(url='view/stock')),
-    path("addcustomer/", views.addcustomer, name='addcustomer'),
-    path('addstock/', views.addStock, name='addstock'),
+    path("addCustomer/", views.addcustomer, name='addcustomer'),
+    path('addStock/', views.addStock, name='addstock'),
     path('view/<str:choice>/', views.view, name = 'view'),
-    path('addsale/', views.addsale, name = 'sell'),
+    path('addSale/', views.addsale, name = 'addSale'),
     # path('logout/', views.logout, name='logout'),
     # path('login/', views.login, name='login'),
     path('search/', views.item_search, name="itemSearch"),
-    path('editdata/', views.editData, name='editData'),
+    path('editData/', views.editData, name='editData'),
     #XXXXXXXXXXXXXXXXXXX UPDATED:ADDED PARAMETERS TO GET CSV BASED ON CHOICE.
     path('getstock/<str:choice>/<str:value>/', views.getfile, name='getStock'),
      #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
         #Added 23-05-23
-    path('restoredata/', views.restoreData, name='restoreData')
+    path('restoreData/', views.restoreData, name='restoreData'),
+    path('getInfo/<str:item>/<str:width>/<str:rollNo>/', views.getInfo, name='getInfo')#added 01-06-2023
 
 ]
 
