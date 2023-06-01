@@ -6,44 +6,63 @@
         <h1>{{heading}}</h1>
         </div>
         {% endif %}
-    <form class="infoForms" method="post" action="">
+    <form class="infoForms" method="post" action="{% url 'app1:addSale' %}">
         {% csrf_token %}
         <div class="mb-3 autocomplete" id="autocomplete">
           <label for="text" class="form-label">Item Name</label>
-          <input type="text" class="form-control autocomplete-input" placeholder="Item Name" required name="item" value="" id="item" onblur="checkLength()">
+          <input type="text" class="form-control autocomplete-input" placeholder="Item Name" required name="item" value="{{findStock.item}}" id="item" onblur="checkLength()">
           <ul class="autocomplete-result-list item"></ul>
         </div>
         <div class="mb-3 autocomplete" id="autocomplete1">
             <label for="text" class="form-label">Width</label>
-            <input type="text" class="form-control autocomplete-input" placeholder="Width" required name="width" value="" step="any" id="width">
+            <input type="text" class="form-control autocomplete-input" placeholder="Width" required name="width" value="{{findStock.width}}"  id="width">
             <ul class="autocomplete-result-list width"></ul>
         </div>
         <div class="mb-3 autocomplete" id="autocomplete2">
             <label for="text" class="form-label">Roll No.</label>
-            <input id = "Roll_no" type="number" class="form-control autocomplete-input" placeholder="Numeric Only" name="Roll_no" value="" required onblur="show()">
+            <input id = "Roll_no" type="number" class="form-control autocomplete-input" placeholder="Numeric Only" name="Roll_no" value="{{findStock.Roll_no}}" required onblur="show()">
             <ul class="autocomplete-result-list roll"></ul>
         </div>
+        {% if findStock %}
+        <div class="mb-3">
+          <label for="text" class="form-label">Net Weight</label>
+          <input type="number" class="form-control autocomplete-input" value="{{findStock.Net_wt}}" required onblur="show()">
+          <ul class="autocomplete-result-list roll"></ul>
+      </div>
+      <div class="mb-3">
+        <label for="text" class="form-label">Gross Weight</label>
+        <input type="number" class="form-control autocomplete-input" value="{{findStock.Gr_wt}}" required onblur="show()">
+        <ul class="autocomplete-result-list roll"></ul>
+      {% endif %}
+    </div>
         <div class="mb-3 autocomplete" id="autocomplete3">
             <label for="text" class="form-label">Party Name</label>
-            <input type="text" class="form-control autocomplete-input" placeholder="Party Name" value="" id="party_name" onblur="getCustomerPhone()">
+            <input type="text" class="form-control autocomplete-input" placeholder="Party Name" value="{{findSoldStock.customer_name.customer_name}}" id="party_name" onblur="getCustomerPhone()">
             <ul class="autocomplete-result-list "></ul>
         </div>
         <div class="mb-3">
           <label for="text" class="form-label">Party Contact</label>
-          <input type="text" class="form-control" placeholder="Party Contact" name="customer_phone" value="" id="party_phone" onblur="checkUndefined()">
+          <input type="text" class="form-control" placeholder="Party Contact" name="customer_phone" value="{{findSoldStock.customer_name.customer_phone}}" id="party_phone" onblur="checkUndefined()">
           <ul class="autocomplete-result-list"></ul>
       </div>
         <div class="mb-3">
             <label for="text" class="form-label">Date</label>
-            <input type="date" class="form-control" placeholder="Numeric Only" name="sell_date" value="" >
+            {% if not findSoldStock %}
+            <input type="date" class="form-control" placeholder="Numeric Only" name="sell_date" value="">
+            {% endif %}
+            {% if findSoldStock %}
+            <input type="text" class="form-control"  name="sell_date" value="{{findSoldStock.purchase_date}}">
+            {% endif %}
         </div>
         <div class="mb-3">
             <label for="text" class="form-label">Short Narration</label>
-            <input type="text" class="form-control" placeholder="Numeric Only" name="short_narration" value="" onblur="checkLength1()" id="short_narration" required>
+            <input type="text" class="form-control" placeholder="Numeric Only" name="short_narration" value="{{findSoldStock.short_narration}}" onblur="checkLength1()" id="short_narration" required>
         </div>
           <!-- <br> -->
           <br>
+          {% if not findSoldStock %}
         <button type="submit" class="btn btn-primary">Submit</button>
+          {% endif %}
       </form>
       </body>
       <script>
