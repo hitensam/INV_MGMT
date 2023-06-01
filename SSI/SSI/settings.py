@@ -26,7 +26,7 @@ SECRET_KEY = 'tp8v6wf^3c=u1qy4j+q59_(pb8$dxozyvm*&xpdrwc!w89d)3p'
 DEBUG = os.getenv('DEBUG', False) == 'True'
 
 
-# DEBUG = bool(True) #Enable when in debug mode.
+DEBUG = bool(True) #Enable when in debug mode.
 
 ALLOWED_HOSTS = ['hitensam.pythonanywhere.com']
 
@@ -123,7 +123,7 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles') ##specify static root for staticfiles
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles') ##specify static root
 
 STATIC_URL = '/static/'
 
