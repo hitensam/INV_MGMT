@@ -20,8 +20,9 @@ urlpatterns = [
      #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
         #Added 23-05-23
     path('restoreData/', views.restoreData, name='restoreData'),
-    path('getInfo/<str:item>/<str:width>/<str:rollNo>/', views.getInfo, name='getInfo')#added 01-06-2023
+    path('getInfo/', views.getInfo, name='getInfo')#added 02-06-2023
 
+    #path('getInfo/<str:item>/<str:width>/<str:rollNo>/', views.getInfo, name='getInfo')#added 01-06-2023
 ]
 
 # handler404 = 'app1.views.error_404'

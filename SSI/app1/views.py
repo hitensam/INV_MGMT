@@ -184,14 +184,24 @@ def view(request, choice=0):
                 stock = models.stock.objects.filter(sell ='0').all()
                 return render(request, 'app1/view.html', context={'stock' : stock, 'heading' : 'Available Stock'})
         elif choice=='sold':
-            # if (request.method == 'POST'):
-            #         print(request.POST)
-            #         return HttpResponse('hi')
-            # else:
-                sold = models.Sold.objects.all()
+            if (request.method == 'POST'):
+                    details=request.POST
+                    if('sell_date' in details and len(details['sell_date'])!=0): #'sell_date' in details can be removed.
+                        if('choice' in details and details['choice']== 'range'):
+                            sold=models.Sold.objects.filter(purchase_date__range=[str(details['sell_date']), now.today()]).all() #without .all() also same results. Checking Left.
+                        else:
+                            sold=models.Sold.objects.filter(purchase_date=str(details['sell_date'])).all()
+
+                        if len(sold) == 0:
+                            return render(request, 'app1/view.html', context={'sold' : sold, 'heading' : 'NOTHING FOUND', 'showForm':'showForm'})
+                        return render(request, 'app1/view.html', context={'sold' : sold, 'heading' : 'Sold', 'showForm':'showForm'})
+                    sold = models.Sold.objects.all().order_by('purchase_date')#Changed 01-06-2023
+                    return render(request, 'app1/view.html', context={'sold' : sold, 'heading' : 'Sold', 'showForm':'showForm'})
+            else:
+                sold = models.Sold.objects.all().order_by('purchase_date')#Changed 01-06-2023
                 if len(sold) == 0:
                     return render(request, 'app1/view.html', context={'sold' : sold, 'heading' : 'NOTHING FOUND'})
-                return render(request, 'app1/view.html', context={'sold' : sold, 'heading' : 'Sold'})
+                return render(request, 'app1/view.html', context={'sold' : sold, 'heading' : 'Sold', 'showForm':'showForm'})
 
 
         else:
@@ -245,7 +255,7 @@ def addsale(request): #changed
                 stock.sell_no = customer.customer_phone
                 try:
                     smile_face = emoji.emojize(":grinning_face_with_big_eyes:")
-                    message_var = f"Hi {customer.customer_name}!\n\nThanks for your purchase {smile_face}\n\nItem: {details['item']} \nWidth: {(details['width'])}\nRoll No: {(details['Roll_no'])}\nDATED: {sms_date_send}"
+                    message_var = f"Hi {customer.customer_name}!\n\nThanks for your purchase. {smile_face}\n\nItem: {details['item']} \nWidth: {(details['width'])}\nRoll No: {(details['Roll_no'])}\nDATED: {sms_date_send}"
                     api_key="api_key"
                     url = "https://www.fast2sms.com/dev/bulkV2"
 
@@ -314,7 +324,6 @@ def item_search(request):
                 """models.stock.objects.filter(width__range = (0,float(general))).all()""",\
                     """models.stock.objects.filter(Roll_no__range = (0,int(general))).all()"""]
         send_data = ['party', 'item', 'width', 'roll'] #
-        count = 0
         for y in range(0,len(search_in)):
             search_data = eval(search_in[y])
             if len(search_data)!=0:
@@ -455,7 +464,7 @@ def restoreData(request):
             return render(request, 'app1/restoreData.html', context={'heading': 'Restore Data', 'message': 'UPLOADED FILE IS NOT CSV'})
         else:
             try:
-                context = {'heading': 'Restore Data', 'message': 'Results: '}
+                context = {'heading': 'Restore Data', 'message': 'Results: ', 'stockAdded' :[], 'contactsAdded':[]}
                 file = pd.read_csv(file, encoding='utf-8')
             except:
                 return render(request, 'app1/restoreData.html', context={'heading': 'Restore Data', 'message': 'Encoding Issue'})
@@ -474,6 +483,7 @@ def restoreData(request):
                                     existingCustomer = models.customer(customer_name=l[i][0], customer_phone=l[i][1])
                                     existingCustomer.save()
                                     context['message'] = context['message'] + f'\\n{i+1} added'
+                                    context['contactsAdded'].append(existingCustomer)
 
                         else:
                             context['message'] = context['message'] + f'\\n{i+1} already exists'
@@ -481,9 +491,9 @@ def restoreData(request):
                     except:
                         context['heading'] = f'Customer details {i+1} issue.'
                         context['message'] = context['message'] + f'\\n{i+1} error'
-                        return render(request, 'app1/restoreData.html', context=context) 
-                
-                else:    
+                        return render(request, 'app1/restoreData.html', context=context)
+
+                else:
                 # print('Name : ', l[i][0], " ", 'width ', l[i][1], " ", 'roll : ', l[i][2], " net :", l[i][3], " gross : ", l[i][4])
                     try:
                         try:
@@ -502,6 +512,7 @@ def restoreData(request):
                     except models.stock.DoesNotExist:
                         stock = models.stock(item=l[i][0], width=float(l[i][1]), Roll_no=int(l[i][2]), Net_wt=float(l[i][3]), Gr_wt=float(l[i][4]))
                         stock.save()
+                        context['stockAdded'].append(stock)
                         context['message'] = context['message'] + f'\\n{i+1} added '
                     if (len(l[i])==8):
                         try:
@@ -517,7 +528,7 @@ def restoreData(request):
                                 context['message'] = context['message'] + f'\\n{i+1} error'
                                 return render(request, 'app1/restoreData.html', context=context)
                         if str(l[i][5]) != '0' and l[i][6] != 0 and l[i][7] != '':
-                                existingCustomer = models.customer.objects.filter(customer_name=(l[i][5]))
+                                existingCustomer = models.customer.objects.filter(Q(customer_name=(l[i][0]))|Q(customer_phone=int(l[i][1])))#updated condition
                                 if not existingCustomer:
                                         existingCustomer = models.customer(customer_name=l[i][5], customer_phone=l[i][6])
                                         existingCustomer.save()
@@ -542,36 +553,50 @@ def restoreData(request):
                                     except:
                                                 context['heading'] = f"DATE NOT IN DD-MM-YYYY Format: {i+1}"
                                                 return render(request, 'app1/restoreData.html', context=context)
+        if(len(context['contactsAdded'])!=0 and len(context['stockAdded'])!=0):
+            return render(request, 'app1/restoreData.html', context=context)
+
+        if(len(context['contactsAdded'])!=0):
+            customer=context['contactsAdded']
+            message=context['message']
+            return render(request, 'app1/view.html', context={'customer' : customer, 'heading' : 'Customers Added','message': message})
+
+        if(len(context['stockAdded'])!=0):
+            stock=context['stockAdded']
+            message=context['message']
+            return render(request, 'app1/view.html', context={'stock' : stock, 'heading' : 'Stock Added', 'message': message,'restoreData':'restoreData'})
 
         return render(request, 'app1/restoreData.html', context=context)
     else:
         context={'heading' : "Restore Data", 'message':"UPLOAD CSV FILE ONLY."}
         return render(request, 'app1/restoreData.html', context=context)
-    
 
-
-
-def getInfo(request, item=0,width=0,rollNo=0):
-            #  models.stock(item = details['item'], width = float(details['width']), Roll_no = int(details['Roll_no']), Net_wt = float(details['Net_wt']), Gr_wt = float(details['Gr_wt']))
+def getInfo(request): #item,width,rollNo=0 removed
     if(request.method=="GET"):
         context={'heading':'Info/Add Sale', 'message':''}
-        try:
-            findStock = models.stock.objects.filter(item=item, width=width, Roll_no=rollNo).get()
-            context.update({'findStock' : findStock})
-            if (findStock.sell=="0" and findStock.sell_no==0):
-                    return render(request,'app1/addsale.html', context=context)
-            else:
-                findSoldStock = models.Sold.objects.filter(item_purchase=findStock).get()
-                context.update({'findSoldStock' : findSoldStock})
-                context['message'] = "Already Sold."
-                return render(request,'app1/addsale.html', context=context)
+        GET=request.GET;
+        if('item' in GET and 'width' in GET and 'RollNo' in GET ):
+            item=GET['item']
+            width=GET['width']
+            rollNo=GET['RollNo']
+            try:
+                findStock = models.stock.objects.filter(item=item, width=width, Roll_no=rollNo).get()
+                context.update({'findStock' : findStock})
+                if (findStock.sell=="0" and findStock.sell_no==0):
+                        return render(request,'app1/getInfo.html', context=context)
+                else:
+                    findSoldStock = models.Sold.objects.filter(item_purchase=findStock).get()
+                    context.update({'findSoldStock' : findSoldStock})
+                    context['message'] = "Already Sold."
+                    return render(request,'app1/getInfo.html', context=context)
 
-        except:
-            context['message'] = "Stock with given info does not exist."
-            return redirect('/addsale/?param1={}'.format(context['message']))
-    
+            except:
+                context['message'] = "Stock with given info does not exist."
+                return redirect('/addSale/?param1={}'.format(context['message']))
 
+        else:
+            return redirect('/addSale/?param1={}'.format('All Parameters Not Specified.'))
 
 
     else:
-        return redirect('/addsale/?param1={}'.format('Invalid URL'))
+        return redirect('/addSale/?param1={}'.format('Invalid URL'))
