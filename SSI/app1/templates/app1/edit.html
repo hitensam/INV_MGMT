@@ -37,15 +37,14 @@
       <label for="text" class="form-label">Party Contact</label>
       <input type="text" class="form-control" placeholder="Party Contact" name="customer_phone" value=""
         id="party_phone" onblur="checkUndefined()">
-      <ul class="autocomplete-result-list"></ul>
     </div>
     <div class="mb-3">
       <label for="text" class="form-label">Date</label>
-      <input type="date" class="form-control" placeholder="Numeric Only" name="sell_date" value="">
+      <input type="date" class="form-control" placeholder="Enter the date you want Replaced With" name="sell_date" value="">
     </div>
     <div class="mb-3">
       <label for="text" class="form-label">Short Narration</label>
-      <input type="text" class="form-control" placeholder="Numeric Only" name="short_narration" value=""
+      <input type="text" class="form-control" placeholder="Enter info you want replaced with" name="short_narration" value=""
         onblur="checkLength1()" id="short_narration">
     </div>
     <!-- <br> -->
@@ -181,13 +180,11 @@
           // resolve(data.data)
           if (data.data.length > 0) {
             if (data.data[6] === 0) {
-              alert(`Item Name: ${data.data[0]}\nItem Width: ${data.data[1]}\nRoll No.: ${data.data[2]}
-              Net Weight: ${data.data[3]}\nGross Weight: ${data.data[4]}\nStatus: AVAILABLE`)
+              alert(`Item Name: ${data.data[0]}\nItem Width: ${data.data[1]}\nRoll No.: ${data.data[2]}\nNet Weight: ${data.data[3]}\nGross Weight: ${data.data[4]}\nStatus: AVAILABLE`)
             }
             else {
               alert(
-                `Item Name: ${data.data[0]}\nItem Width: ${data.data[1]}\nRoll No.: ${data.data[2]}
-                Net Weight: ${data.data[3]}\nGross Weight: ${data.data[4]}\nCustomer Name: ${data.data[5]}\nCustomer Number: ${data.data[6]}
+                `Item Name: ${data.data[0]}\nItem Width: ${data.data[1]}\nRoll No.: ${data.data[2]}\nNet Weight: ${data.data[3]}\nGross Weight: ${data.data[4]}\nCustomer Name: ${data.data[5]}\nCustomer Number: ${data.data[6]}
                 `)
             }
           }

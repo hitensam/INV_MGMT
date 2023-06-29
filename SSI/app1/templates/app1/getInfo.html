@@ -8,46 +8,18 @@
         {% endif %}
     <form class="infoForms" method="post" action="{% url 'app1:addSale' %}">
         {% csrf_token %}
-        {% if findStock %}
         <div class="mb-3">
-        {% else %}
-        <div class="mb-3 autocomplete" id="autocomplete">
-        {% endif %}
           <label for="text" class="form-label">Item Name</label>
-          {% if not findStock %}
-          <input type="text" class="form-control autocomplete-input" placeholder="Item Name" required name="item" value="" id="item" onblur="checkLength()">
-          <ul class="autocomplete-result-list item"></ul>
-          {% else %}
           <input type="text" class="form-control" name="item" value="{{findStock.item}}" readonly>
-          {% endif %}
         </div>
-        {% if findStock %}
         <div class="mb-3">
-        {% else %}
-        <div class="mb-3 autocomplete" id="autocomplete1">
-        {% endif %}
             <label for="text" class="form-label">Width</label>
-            {% if not findStock %}
-            <input type="text" class="form-control autocomplete-input" placeholder="Width" required name="width" value=""  id="width">
-            <ul class="autocomplete-result-list width"></ul>
-            {% else %}
             <input type="text" class="form-control" name="width" value="{{findStock.width}}" readonly>
-            {% endif %}
         </div>
-         {% if findStock %}
         <div class="mb-3">
-        {% else %}
-        <div class="mb-3 autocomplete" id="autocomplete2">
-        {% endif %}
             <label for="text" class="form-label">Roll No.</label>
-            {% if not findStock %}
-            <input id = "Roll_no" type="number" class="form-control autocomplete-input" placeholder="Numeric Only" name="Roll_no" value="" required onblur="show()">
-            <ul class="autocomplete-result-list roll"></ul>
-            {% else %}
             <input type="text" class="form-control" name="Roll_no" value="{{findStock.Roll_no}}" readonly>
-            {% endif %}
         </div>
-        {% if findStock %}
         <div class="mb-3">
           <label for="text" class="form-label">Net Weight</label>
           <input type="text" class="form-control" value="{{findStock.Net_wt}}" readonly>
@@ -56,27 +28,17 @@
         <label for="text" class="form-label">Gross Weight</label>
         <input type="text" class="form-control" value="{{findStock.Gr_wt}}" readonly>
     </div>
-    {% endif %}
-        {% if findSoldStock %}
-        <div class="mb-3">
-        {% else %}
         <div class="mb-3 autocomplete" id="autocomplete3">
-        {% endif %}
             <label for="text" class="form-label">Party Name</label>
             {% if not findSoldStock %}
-            <input type="text" class="form-control autocomplete-input" placeholder="Party Name" value="" id="party_name" onblur="getCustomerPhone()">
-            <ul class="autocomplete-result-list "></ul>
+            <input type="text" class="form-control" placeholder="Party Name" value="" id="party_name" onblur="getCustomerPhone()">
             {% else %}
             <input type="text" class="form-control" value="{{findSoldStock.customer_name.customer_name}}" readonly>
             {% endif %}
         </div>
         <div class="mb-3">
           <label for="text" class="form-label">Party Contact</label>
-          {% if not findSoldStock %}
-          <input type="text" class="form-control" placeholder="Party Contact" name="customer_phone" value="" id="party_phone" onblur="checkUndefined()">
-          {% else %}
-          <input type="text" class="form-control" value="{{findSoldStock.customer_name.customer_phone}}" readonly>
-          {% endif %}
+          <input type="text" class="form-control" name="customer_phone" id="party_phone" value="{{findSoldStock.customer_name.customer_phone}}" readonly>
       </div>
         <div class="mb-3">
             <label for="text" class="form-label">Date</label>
@@ -96,7 +58,6 @@
             {% endif %}
 
         </div>
-          <!-- <br> -->
           <br>
           {% if not findSoldStock %}
         <button type="submit" class="btn btn-primary">Submit</button>

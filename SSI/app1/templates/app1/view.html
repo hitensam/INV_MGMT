@@ -8,7 +8,7 @@
         </div>
         {% endif %}
 <div class="container mt-3" style="overflow-x:auto;">
-    {% if stock %}
+    {% if stock and not restoreData %}
     <form action="" method="post">
         {% csrf_token %}
         <div class="mb-3 autocomplete" id="autocomplete">
@@ -26,33 +26,45 @@
         <input type="submit"  class="btn btn-primary">
         {% if value %}
         <input type="button" onclick="window.location.href='/getstock/{{choice}}/{{value}}';" value="Download" class="btn btn-primary">
-        {% endif %}  
+        {% endif %}
         <!-- </form> -->
+    {% endif %}
+    {% if showForm %}
+    <form class="infoForms" method="post" action="">
+      {% csrf_token %}
+      <div class="mb-3">
+        <label for="text" class="form-label">Date</label>
+        <input type="date" class="form-control" placeholder="Numeric Only" name="sell_date" value="">
+      </div>
+      <input type="radio" name="choice" value="range" class="filter">Date Range - Start Date to Today
+      <br>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
     {% endif %}
   <table class="table table-hover">
       <thead>
         <tr>
+          {% if stock %}
+          <th>Serial No.</th>
+          <th>Item</th>
+          <th>Width</th>
+          <th>Roll No. </th>
+          <th>Net Weight</th>
+          <th>Gross Weight</th>
+          <th id="soldRemove"onclick="hideShow()">Status</th>
+          <th hidden >OPERATION</th>
+          {% endif %}
           {% if customer %}
           <th>Serial No.</th>
           <th>Name</th>
           <th>Contact</th>
           {% endif %}
-          {% if stock %}
-          <th>Serial No.</th>
-          <th>Item</th>
-          <th>Roll No. </th>
-          <th>Width</th>
-          <th>Net Weight</th>
-          <th>Gross Weight</th>
-          <th id="soldRemove"onclick="hideShow()">Status</th>
-          <th hidden >OPERATION</th>
-        {% endif %}
 
         {% if sold %}
         <th>Serial No.</th>
         <th>Item</th>
-        <th>Roll No.</th>
         <th>Width</th>
+        <th>Roll No.</th>
         <th>Net Weight</th>
         <th>Gross Weight</th>
         <th>Date</th>
@@ -78,8 +90,8 @@
         <tr class="insertBefore">
           <th scope="row" class="sno"></th>
           <td class="getitemName">{{data.item}}</td>
-          <td class="rollNo">{{data.Roll_no}}</td>
           <td class="width_same">{{data.width}}</td>
+          <td class="rollNo">{{data.Roll_no}}</td>
           <td class="net" style="text-align: center;">{{data.Net_wt}}</td>
           <td class="gross" style="text-align: center;">{{data.Gr_wt}}</td>
           <td class="sellStatus">{{data.sell}}</td>
@@ -99,24 +111,18 @@
         </tr>
         {% endif %}
         {% if sold %}
-        <!-- <form action="" method="post">
-        {% csrf_token %}
-
-        <input type="submit"  class="btn btn-primary"> -->
-
         {% for data in sold %}
         <tr>
           <th scope="row" class="sno"></th>
           <td class="getitemName">{{data.item_purchase.item}}</td>
-          <td class="rollNo">{{data.item_purchase.Roll_no}}</td>
           <td class="width">{{data.item_purchase.width}}</td>
+          <td class="rollNo">{{data.item_purchase.Roll_no}}</td>
           <td  class="net" style="text-align: center;">{{data.item_purchase.Net_wt}}</td>
           <td class="gross" style="text-align: center;">{{data.item_purchase.Gr_wt}}</td>
           <td>{{data.purchase_date}}</td>
           <td>{{data.customer_name.customer_name}}</td>
           <td>{{data.customer_name.customer_phone}}</td>
           <td class="shortNarration" >{{data.short_narration}}</td> <!--  <input type="text"  class="form-control" value="{{data.short_narration}}" onblur="makeChanges(this) />"-->
-          <!-- <td ></td> -->
         </tr>
         {% endfor %}
         <tr>
@@ -124,8 +130,6 @@
           <td class="netWt" style="text-align: center;"></td>
           <td class="Gross" style="text-align: center;"></td>
         </tr>
-      <!-- </form> -->
-
         {% endif %}
       </tbody>
     </table>
