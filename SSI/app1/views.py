@@ -186,6 +186,7 @@ def view(request, choice=0):
         elif choice=='sold':
             if (request.method == 'POST'):
                     details=request.POST
+<<<<<<< Updated upstream
                     if('sell_date' in details and len(details['sell_date'])!=0): #'sell_date' in details can be removed.
                         if('choice' in details and details['choice']== 'range'):
                             sold=models.Sold.objects.filter(purchase_date__range=[str(details['sell_date']), now.today()]).all() #without .all() also same results. Checking Left.
@@ -199,6 +200,15 @@ def view(request, choice=0):
                     return render(request, 'app1/view.html', context={'sold' : sold, 'heading' : 'Sold', 'showForm':'showForm'})
             else:
                 sold = models.Sold.objects.all().order_by('purchase_date')#Changed 01-06-2023
+=======
+                    if(str(details['sell_date'])):
+                        sold=models.Sold.objects.filter(purchase_date=str(details['sell_date'])).all() #without .all() also same results. Checking Left.
+                        if len(sold) == 0:
+                            return render(request, 'app1/view.html', context={'sold' : sold, 'heading' : 'NOTHING FOUND'})
+                        return render(request, 'app1/view.html', context={'sold' : sold, 'heading' : 'Sold'})
+            else:
+                sold = models.Sold.objects.all().order_by('purchase_date') #Changed 01-06-2023
+>>>>>>> Stashed changes
                 if len(sold) == 0:
                     return render(request, 'app1/view.html', context={'sold' : sold, 'heading' : 'NOTHING FOUND'})
                 return render(request, 'app1/view.html', context={'sold' : sold, 'heading' : 'Sold', 'showForm':'showForm'})
