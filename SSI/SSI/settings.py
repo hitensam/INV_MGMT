@@ -28,7 +28,11 @@ DEBUG = os.getenv('DEBUG', False) == 'True'
 
 DEBUG = bool(True) #Enable when in debug mode.
 
+<<<<<<< Updated upstream
 ALLOWED_HOSTS = ['hitensam.pythonanywhere.com']
+=======
+ALLOWED_HOSTS = ['hitensam.pythonanywhere.com'] 
+>>>>>>> Stashed changes
 
 
 if(DEBUG):
