@@ -1,11 +1,5 @@
-# from email import message
-# import re
-from time import time
 from django.shortcuts import render, redirect
 from  django.http import HttpResponse, Http404,HttpResponseNotFound, HttpResponseRedirect, JsonResponse
-from django.urls import reverse
-from django.views.decorators.cache import cache_page
-from django.views.decorators.csrf import csrf_protect
 from .   import  models #customer, Sold, stock
 from django.db.models import Q
 from . import IST_TIME as now
@@ -186,7 +180,6 @@ def view(request, choice=0):
         elif choice=='sold':
             if (request.method == 'POST'):
                     details=request.POST
-<<<<<<< Updated upstream
                     if('sell_date' in details and len(details['sell_date'])!=0): #'sell_date' in details can be removed.
                         if('choice' in details and details['choice']== 'range'):
                             sold=models.Sold.objects.filter(purchase_date__range=[str(details['sell_date']), now.today()]).all() #without .all() also same results. Checking Left.
@@ -200,15 +193,6 @@ def view(request, choice=0):
                     return render(request, 'app1/view.html', context={'sold' : sold, 'heading' : 'Sold', 'showForm':'showForm'})
             else:
                 sold = models.Sold.objects.all().order_by('purchase_date')#Changed 01-06-2023
-=======
-                    if(str(details['sell_date'])):
-                        sold=models.Sold.objects.filter(purchase_date=str(details['sell_date'])).all() #without .all() also same results. Checking Left.
-                        if len(sold) == 0:
-                            return render(request, 'app1/view.html', context={'sold' : sold, 'heading' : 'NOTHING FOUND'})
-                        return render(request, 'app1/view.html', context={'sold' : sold, 'heading' : 'Sold'})
-            else:
-                sold = models.Sold.objects.all().order_by('purchase_date') #Changed 01-06-2023
->>>>>>> Stashed changes
                 if len(sold) == 0:
                     return render(request, 'app1/view.html', context={'sold' : sold, 'heading' : 'NOTHING FOUND'})
                 return render(request, 'app1/view.html', context={'sold' : sold, 'heading' : 'Sold', 'showForm':'showForm'})
@@ -221,22 +205,9 @@ def addsale(request): #changed
     details = request.POST
     print(request.POST)
     print('\n\n', details, '\n\n')
-    # print(len(details['customer_phone']))
-    # if (request.method == 'POST' and 'Roll_no' in details and 'item' in details and 'width' in details and len(details['customer_phone']) ==0):
-    #     details = request.POST
-    #     #
-    #     try:
-    #         stock = models.stock.objects.filter(Q(Roll_no = int(details['Roll_no'])) & Q(item = details['item']) \
-    #             & Q(width =  int(details['width']))).get()
-    #         return render(request,'app1/addsale.html', context={'heading' : "Add Sale",'message' : stock})
-    #     except:
-    #         return render(request,'app1/addsale.html', context={'heading' : "Add Sale",'message' :'Fail except (ADD SALE)'} )
     if(request.method == 'POST' and 'customer_phone' in details):
         details = request.POST
-
-        #
         try:
-        # if True:
             stock = models.stock.objects.filter(Q(Roll_no = int(details['Roll_no'])) & Q(item = details['item']) \
                 & Q(width =  (details['width']))).get() #removed INT 01-06-2023
             customer = models.customer.objects.filter(customer_phone = int(details['customer_phone'])).get()
@@ -266,7 +237,7 @@ def addsale(request): #changed
                 try:
                     smile_face = emoji.emojize(":grinning_face_with_big_eyes:")
                     message_var = f"Hi {customer.customer_name}!\n\nThanks for your purchase. {smile_face}\n\nItem: {details['item']} \nWidth: {(details['width'])}\nRoll No: {(details['Roll_no'])}\nDATED: {sms_date_send}"
-                    api_key="UkhTFuP1cLVbGlt0KEvinC9zgap8ZQ37dRXHjMesorJY4NO5WwLEKrV2pGfYCM67oBwmsd8QJ0nAge34"
+                    api_key="ENTER api key"
                     url = "https://www.fast2sms.com/dev/bulkV2"
 
                     querystring = {"authorization":api_key,"message": message_var,"language":"english","route":"q","numbers":customer.customer_phone}
