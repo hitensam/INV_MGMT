@@ -29,21 +29,14 @@
         {% endif %}
         <!-- </form> -->
     {% endif %}
-<<<<<<< Updated upstream
     {% if showForm %}
-=======
-    {% if sold %}
->>>>>>> Stashed changes
     <form class="infoForms" method="post" action="">
       {% csrf_token %}
       <div class="mb-3">
         <label for="text" class="form-label">Date</label>
         <input type="date" class="form-control" placeholder="Numeric Only" name="sell_date" value="">
       </div>
-<<<<<<< Updated upstream
       <input type="radio" name="choice" value="range" class="filter">Date Range - Start Date to Today
-=======
->>>>>>> Stashed changes
       <br>
       <button type="submit" class="btn btn-primary">Submit</button>
     </form>
