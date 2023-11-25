@@ -6,21 +6,21 @@
         <h1>{{heading}}</h1>
         </div>
         {% endif %}
-    <form class="infoForms" method="post" action="{% url 'app1:addSale' %}">
+    <form class="infoForms" method="post" action="{% url 'app1:searchFilter' %}">
         {% csrf_token %}
         <div class="mb-3 autocomplete" id="autocomplete">
           <label for="text" class="form-label">Item Name</label>
-          <input type="text" class="form-control autocomplete-input" placeholder="Item Name" required name="item" value="" id="item" onblur="checkLength('item')">
+          <input type="text" class="form-control autocomplete-input" placeholder="Item Name"  name="item" value="" id="item" onblur="checkLength('item')">
           <ul class="autocomplete-result-list item"></ul>
         </div>
         <div class="mb-3 autocomplete" id="autocomplete1">
             <label for="text" class="form-label">Width</label>
-            <input type="text" class="form-control autocomplete-input" placeholder="Width" required name="width" value=""  id="width">
+            <input type="text" class="form-control autocomplete-input" placeholder="Width"  name="width" value=""  id="width">
             <ul class="autocomplete-result-list width"></ul>
         </div>
         <div class="mb-3 autocomplete" id="autocomplete2">
             <label for="text" class="form-label">Roll No.</label>
-            <input id = "Roll_no" type="" class="form-control autocomplete-input" placeholder="Numeric Only" name="Roll_no" value="" required onblur="show('item','width','Roll_no')">
+            <input id = "Roll_no" type="" class="form-control autocomplete-input" placeholder="Numeric Only" name="Roll_no" value=""  onblur="show('item','width','Roll_no')">
             <ul class="autocomplete-result-list roll"></ul>
         </div>
         <div id="itemFields">
@@ -36,64 +36,9 @@
           <label for="text" class="form-label">Party Contact</label>
           <input type="text" class="form-control" placeholder="Party Contact" name="customer_phone" value="" id="party_phone" onblur="checkUndefined()">
       </div>
-        <div class="mb-3">
-            <label for="text" class="form-label">Date</label>
-            <input type="date" class="form-control" name="sell_date" value="">
-        </div>
-        <div class="mb-3">
-          <label for="text" class="form-label">PRICE</label>
-          <input type="number" class="form-control" name="RATE" value="">
-        </div>
-        <div class="mb-3">
-          <label for="text" class="form-label">Total Non Taxable Amount</label>
-          <input type="number" class="form-control" name="TOTAL_AMOUNT" value="">
-        </div>
-        <div class="mb-3">
-          <label for="text" class="form-label">Slitting Price (Per kg.)</label>
-          <input type="number" class="form-control" name="slitting_price" value="">
-        </div>
-        <div class="mb-3">
-          <label for="text" class="form-label">Pleating Price (Per kg.)</label>
-          <input type="number" class="form-control" name="pleating_price" value="">
-        </div>
-        <div class="mb-3">
-          <label for="text" class="form-label">Packing Charges</label>
-          <input type="number" class="form-control" name="PACKING_CHARGES" value="">
-        </div>
-        <div class="mb-3">
-          <label for="text" class="form-label">IGST</label>
-          <input type="number" class="form-control" name="IGST" value="">
-        </div>
-        <div class="mb-3">
-          <label for="text" class="form-label">CGST</label>
-          <input type="number" class="form-control" name="CGST" value="">
-        </div>
-        <div class="mb-3">
-          <label for="text" class="form-label">SGST</label>
-          <input type="number" class="form-control" name="SGST" value="">
-        </div>
-        {% if getProformaInvoice %}
-        <input type="hidden" name="choice" value="PROFORMA_INVOICE">
-        {% endif %}
-        {% if addsale %}
-        <div class="form-check mb-3">
-        <label class="form-check-label" for="flexCheckDefault" style="background-color: red;">
-            Sales Invoice
-          </label>
-          <input class="form-check-input" type="checkbox" name="choice" value="SALES_INVOICE" id="flexCheckDefault">
-        </div>
-        <div class="mb-3">
-            <label for="text" class="form-label">Short Narration</label>
-            <input type="text" class="form-control" name="short_narration" value="" onblur="checkLength1()" id="short_narration">
-        </div>
-        {% endif %}
         <input type="hidden" name="click_count" id="click_count" value="0">
           <br>
-           {% if getProformaInvoice %}
-            <button type="submit" class="btn btn-primary" onclick="alert('You are generating Proforma Invoice')">Submit</button>
-            {% else %}
-            <button type="submit" class="btn btn-primary" onclick="alert('You are adding Sale')">Submit</button>
-            {% endif %}
+        <button type="submit" class="btn btn-primary">Submit</button>
       </form>
       </body>
       <script>
@@ -257,7 +202,7 @@
                     alert(
                 `Item Name: ${data.data[0]}\nItem Width: ${data.data[1]}\nRoll No.: ${data.data[2]}
 Net Weight: ${data.data[3]}\nGross Weight: ${data.data[4]}\n${data.data[5]}`)}
-
+                  
                 else if(data.data[6]===0)
                   {
                 alert(
@@ -289,7 +234,7 @@ Net Weight: ${data.data[3]}\nGross Weight: ${data.data[4]}\nCustomer Name: ${dat
           alert('ENTER A VALID PARTY NAME')
         }
       }
-
+      
       function initializeAutocomplete(id) {
 
     new Autocomplete(`#Autocomplete${id}`, {
@@ -373,24 +318,24 @@ Net Weight: ${data.data[3]}\nGross Weight: ${data.data[4]}\nCustomer Name: ${dat
 
 
       let fieldCount = 0;
-
+  
       function addMoreFields() {
     fieldCount++;
     document.getElementById('click_count').value = fieldCount; // Update the hidden input value
     const newItemFields = `
         <div class="mb-3 autocomplete" id="Autocomplete${fieldCount}">
             <label for="text" class="form-label">Item Name ${fieldCount}</label>
-            <input type="text" class="form-control autocomplete-input" placeholder="Item Name" required name="item_${fieldCount}" value="" id="item_${fieldCount}" onblur="checkLength(item_${fieldCount})">
+            <input type="text" class="form-control autocomplete-input" placeholder="Item Name"  name="item_${fieldCount}" value="" id="item_${fieldCount}" onblur="checkLength(item_${fieldCount})">
             <ul class="autocomplete-result-list item"></ul>
         </div>
         <div class="mb-3 autocomplete" id="autocomplete1_${fieldCount}">
             <label for="text" class="form-label">Width ${fieldCount}</label>
-            <input type="text" class="form-control autocomplete-input" placeholder="Width" required name="width_${fieldCount}" value="" id="width_${fieldCount}">
+            <input type="text" class="form-control autocomplete-input" placeholder="Width"  name="width_${fieldCount}" value="" id="width_${fieldCount}">
             <ul class="autocomplete-result-list width"></ul>
         </div>
         <div class="mb-3 autocomplete" id="autocomplete2_${fieldCount}">
             <label for="text" class="form-label">Roll No. ${fieldCount}</label>
-            <input id="Roll_no_${fieldCount}" type="text" class="form-control autocomplete-input" placeholder="Numeric Only" name="Roll_no_${fieldCount}" value="" required onblur="show('item_${fieldCount}','width_${fieldCount}','Roll_no_${fieldCount}')">
+            <input id="Roll_no_${fieldCount}" type="text" class="form-control autocomplete-input" placeholder="Numeric Only" name="Roll_no_${fieldCount}" value=""  onblur="show('item_${fieldCount}','width_${fieldCount}','Roll_no_${fieldCount}')">
             <ul class="autocomplete-result-list roll"></ul>
         </div>
     `;
@@ -403,8 +348,8 @@ Net Weight: ${data.data[3]}\nGross Weight: ${data.data[4]}\nCustomer Name: ${dat
     // Initialize autocomplete for the newly added fields
     initializeAutocomplete(fieldCount);
       }
-
-
+  
+  
   </script>
     <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" async defer></script> -->
 </body>

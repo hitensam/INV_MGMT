@@ -9,7 +9,7 @@
         {% endif %}
 <div class="container mt-3" style="overflow-x:auto;">
     {% if stock and not restoreData %}
-    <form action="" method="post">
+    <form action="{% url 'app1:view' choice='stock' %}" method="post">
         {% csrf_token %}
         <div class="mb-3 autocomplete" id="autocomplete">
           <!--<label for="text" class="form-label">Please Select Option First</label>-->
@@ -41,6 +41,27 @@
       <button type="submit" class="btn btn-primary">Submit</button>
     </form>
     {% endif %}
+    {% if addFromProformaID %}
+    <form class="infoForms" method="post" action="">
+      {% csrf_token %}
+      <div class="mb-3">
+        <label for="text" class="form-label">Proforma ID</label>
+        <input type="number" class="form-control" placeholder="Numeric Only" name="proforma_ID" value="" required>
+        <br>
+        <label for="text" class="form-label">Date</label>
+        <input type="date" class="form-control" placeholder="Date" name="sell_date" value="">
+        <br>
+        <label for="text" class="form-label">Short Narration</label>
+        <input type="text" class="form-control" placeholder="Text" name="short_narration" value="">
+      </div>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+    {% if addedFromProformaID %}
+    <pre>Customer Name: {{info.customer_name.customer_name}}</pre>
+    <pre>Customer Contact: {{info.customer_name.customer_phone}}</pre>
+    <pre>Rate: {{info.sell_price}}</pre>
+    {% endif %}
+    {% endif %}
   <table class="table table-hover">
       <thead>
         <tr>
@@ -69,9 +90,21 @@
         <th>Gross Weight</th>
         <th>Date</th>
         <th>Customer Name</th>
+        <th>Sell Price</th>
+        <th>Slitting Price</th>
+        <th>Pleating Price</th>
         <th>Customer Mob.</th>
         <th>Short Narration</th>
         <!-- <th>NEW COMMENT</th> -->
+        {% endif %}
+
+        {% if addedFromProformaID %}
+        <th>Serial No.</th>
+        <th>Item</th>
+        <th>Width</th>
+        <th>Roll No.</th>
+        <th>Net Weight</th>
+        <th>Gross Weight</th>
         {% endif %}
         </tr>
       </thead>
@@ -100,7 +133,7 @@
           </div></td>
         </tr>
         {% endfor %}
-      </form>
+      <!-- </form>  commented--> 
         {% if contentSetting == 1 %}
         <div class="contentSetting"></div>
         {% endif %}
@@ -121,6 +154,9 @@
           <td class="gross" style="text-align: center;">{{data.item_purchase.Gr_wt}}</td>
           <td>{{data.purchase_date}}</td>
           <td>{{data.customer_name.customer_name}}</td>
+          <td>{{data.sell_price}}</td>
+          <td>{{data.slitting_price}}</td>
+          <td>{{data.pleating_price}}</td>
           <td>{{data.customer_name.customer_phone}}</td>
           <td class="shortNarration" >{{data.short_narration}}</td> <!--  <input type="text"  class="form-control" value="{{data.short_narration}}" onblur="makeChanges(this) />"-->
         </tr>
@@ -131,6 +167,18 @@
           <td class="Gross" style="text-align: center;"></td>
         </tr>
         {% endif %}
+        {% if addedFromProformaID %}
+        {% for data in items %}
+        <tr class="insertBefore">
+          <th scope="row" class="sno"></th>
+          <td class="getitemName">{{data.item_req.item}}</td>
+          <td class="width_same">{{data.item_req.width}}</td>
+          <td class="rollNo">{{data.item_req.Roll_no}}</td>
+          <td class="net" style="text-align: center;">{{data.item_req.Net_wt}}</td>
+          <td class="gross" style="text-align: center;">{{data.item_req.Gr_wt}}</td>
+          </tr>
+          {% endfor %}
+          {% endif %}
       </tbody>
     </table>
   </div>

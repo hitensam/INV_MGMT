@@ -30,7 +30,12 @@
   </button>
   <form class="baseForm" action="{% url 'app1:getStock' choice=0 value=0%}" method="post">
     {% csrf_token %}
-    <button type="submit" onclick="">Backup Data</button>
+    <button type="submit" onclick="">Get Stock Excel</button>
+  </form>
+
+    <form class="baseForm" action="{% url 'app1:getDb' %}" method="post">
+    {% csrf_token %}
+    <button type="submit" onclick="">Backup Database</button>
   </form>
 
   <!--Added on 23-05-23-->
@@ -40,13 +45,18 @@
   </form>
 
   <ul class="dropdown-menu">
-    <li><a class="dropdown-item" href="{% url 'app1:view' choice='stock' %}">Stock</a></li>
-    <li><a class="dropdown-item" href="{% url 'app1:view' choice='sold' %}">Sold</a></li>
-    <li><a class="dropdown-item" href="{% url 'app1:view' choice='customer' %}">Customer</a></li>
+    <li><a class="dropdown-item" href="{% url 'app1:searchFilter' %}">Search</a></li>
+    <li><a class="dropdown-item" href="{% url 'app1:getProformaInvoice' %}">Generate Proforma Invoice</a></li>
+    <li><a class="dropdown-item" href="{% url 'app1:getQty' %}">Get PI From Weight</a></li>
+    <li><a class="dropdown-item" href="{% url 'app1:addSaleFromProformaID' %}">Add Sale From PID</a></li>
     <li><a class="dropdown-item" href="{% url 'app1:addSale' %}">Add Sale</a></li>
+    <!-- <li><a class="dropdown-item" href="{% url 'app1:view' choice='stock' %}">Stock</a></li> -->
+    <li><a class="dropdown-item" href="{% url 'app1:view' choice='sold' %}">Sold</a></li>
+    <li><a class="dropdown-item" href="{% url 'app1:view' choice='customer' %}">Customer List</a></li>
     <li><a class="dropdown-item" href="{% url 'app1:addstock' %}">Add Stock</a></li>
     <li><a class="dropdown-item" href="{% url 'app1:addcustomer' %}">Add Customer</a></li>
     <li><a class="dropdown-item" href="{% url 'app1:editData' %}">Edit Data</a></li>
+    <li><a class="dropdown-item" href="{% url 'app1:getOldPdf' %}">Old PDF</a></li>
   </ul>
 </div>
 {% if message %}
