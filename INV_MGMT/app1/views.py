@@ -296,6 +296,8 @@ def addSaleFromProformaID(request):
         elif(date!=False and short_narration!=False):
             customer = items[0].customer_name;
             for x in items:
+                if(x.item_req.sell_no!=0 and x.item_req.sell!="0" and len(models.Sold.objects.filter(item_purchase = x.item_req).all()) != 0):
+                    context['message'] = "Already Sold!!"
                 x.item_req.sell_no = customer.customer_phone
                 x.item_req.sell=customer.customer_name
                 addToSold = models.Sold(customer_name = customer, item_purchase = x.item_req,
