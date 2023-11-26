@@ -13,6 +13,7 @@
   {% load static %}
   <script src="{% static 'app1/bootstrap.bundle.min.js' %}"></script>
   <script src="{% static 'app1/autocomplete.min.js' %}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.2/dist/chart.min.js"></script>
   <link rel="stylesheet" href="{% static 'app1/bootstrap.min.css' %}">
   <link rel="stylesheet" href="{% static 'app1/autocompletestyle.css' %}">
   <!--Added 24 - 05- 2023-->
@@ -46,6 +47,7 @@
 
   <ul class="dropdown-menu">
     <li><a class="dropdown-item" href="{% url 'app1:searchFilter' %}">Search</a></li>
+    <li><a class="dropdown-item" href="{% url 'app1:getMonthlyStats' %}">Monthly Stats</a></li>
     <li><a class="dropdown-item" href="{% url 'app1:getProformaInvoice' %}">Generate Proforma Invoice</a></li>
     <li><a class="dropdown-item" href="{% url 'app1:getQty' %}">Get PI From Weight</a></li>
     <li><a class="dropdown-item" href="{% url 'app1:addSaleFromProformaID' %}">Add Sale From PID</a></li>

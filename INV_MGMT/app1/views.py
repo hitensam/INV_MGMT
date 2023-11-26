@@ -17,6 +17,79 @@ import io
 from reportlab.lib.units import inch
 
 from wsgiref.util import FileWrapper#from django.core.servers.basehttp import FileWrapper #also using io and HttpResponse
+
+from collections import defaultdict
+def getMonthlyStats(request):
+    if(request.method == "POST"):
+        start_date = request.POST['start_date']
+        end_date = request.POST['end_date']
+        try:
+            obj = models.Sold.objects.filter(purchase_date__range=[start_date, end_date]).order_by('purchase_date').all()
+        except:
+            context = {"showForm": True, "heading": "Monthly Stats", 'message' : 'error, please retry.'}
+            return render(request,'app1/getMonthlyStats.html', context=context)
+        else:
+            if len(obj) == 0:
+                context = {"showForm": True, "heading": "Monthly Stats", 'message' : 'error, please retry.'}
+                return render(request,'app1/getMonthlyStats.html', context=context)
+            dates=[]
+            weights = []
+            for x in obj:
+                dates.append(x.purchase_date)
+                weights.append(x.item_purchase.Net_wt)
+            # Dictionary to store total weights per month
+            monthly_weights = defaultdict(float)
+
+        # Iterate through dates and weights
+            for date, weight in zip(dates, weights):
+                month_key = date.strftime("%B %Y")
+                monthly_weights[month_key] += weight
+
+            # Separate lists for months and total weights
+            months_list = []
+            total_weights_list = []
+
+            # Convert the defaultdict to lists
+            for month, total_weight in monthly_weights.items():
+                months_list.append(month)
+                total_weights_list.append(total_weight)
+
+            
+
+            context = {"months": months_list, "weights": total_weights_list, "showForm": True, "heading": "Monthly Stats","duration": f'{months_list[0]} - {months_list[len(months_list) - 1]}'}
+            return render(request,'app1/getMonthlyStats.html', context=context)
+
+    else:
+        obj = models.Sold.objects.filter(purchase_date__range=[now.six_months_ago(), now.today()]).order_by('purchase_date').all()
+        if len(obj) == 0:
+                context = {"showForm": True, "heading": "Monthly Stats", 'message' : 'No data from past 6 months.'}
+                return render(request,'app1/getMonthlyStats.html', context=context)
+        dates=[]
+        weights = []
+        for x in obj:
+            dates.append(x.purchase_date)
+            weights.append(x.item_purchase.Net_wt)
+        # Dictionary to store total weights per month
+        monthly_weights = defaultdict(float)
+
+    # Iterate through dates and weights
+        for date, weight in zip(dates, weights):
+            month_key = date.strftime("%B %Y")
+            monthly_weights[month_key] += weight
+
+        # Separate lists for months and total weights
+        months_list = []
+        total_weights_list = []
+
+        # Convert the defaultdict to lists
+        for month, total_weight in monthly_weights.items():
+            months_list.append(month)
+            total_weights_list.append(total_weight)
+
+
+        context = {"months": months_list, "weights": total_weights_list, "showForm": True, "heading": "Monthly Stats","duration": f'{months_list[0]} - {months_list[len(months_list) - 1]}'}
+        return render(request,'app1/getMonthlyStats.html', context=context) 
+
 def getDb(request):
     # Define the path to your db.sqlite3 file
     db_path = os.path.join(os.path.dirname(__file__), '/home/hitensam/INV_MGMT/db.sqlite3')

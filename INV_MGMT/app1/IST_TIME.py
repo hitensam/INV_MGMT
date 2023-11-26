@@ -2,6 +2,11 @@ import datetime
 from . import models
 INDIA_TIME = datetime.datetime.utcnow() + datetime.timedelta(hours=5, minutes=30) #Adding 5:30 hrs to UCT Time
 
+def six_months_ago():
+    global INDIA_TIME
+    six_months_ago = INDIA_TIME - datetime.timedelta(days=180)
+    return (six_months_ago.strftime('%Y-%m-%d'))
+
 def today():
     global INDIA_TIME
     # datetime.datetime.strftime(INDIA_TIME,"%Y-%m-%d")  #Date of Issue
