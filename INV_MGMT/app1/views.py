@@ -54,7 +54,7 @@ def getMonthlyStats(request):
                 months_list.append(month)
                 total_weights_list.append(total_weight)
 
-            
+
 
             context = {"months": months_list, "weights": total_weights_list, "showForm": True, "heading": "Monthly Stats","duration": f'{months_list[0]} - {months_list[len(months_list) - 1]}'}
             return render(request,'app1/getMonthlyStats.html', context=context)
@@ -88,11 +88,11 @@ def getMonthlyStats(request):
 
 
         context = {"months": months_list, "weights": total_weights_list, "showForm": True, "heading": "Monthly Stats","duration": f'{months_list[0]} - {months_list[len(months_list) - 1]}'}
-        return render(request,'app1/getMonthlyStats.html', context=context) 
+        return render(request,'app1/getMonthlyStats.html', context=context)
 
 def getDb(request):
     # Define the path to your db.sqlite3 file
-    db_path = os.path.join(os.path.dirname(__file__), '/home/hitensam/INV_MGMT/db.sqlite3')
+    db_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'db.sqlite3')
 
     # Open the file for reading
     db_file = open(db_path, 'rb')
@@ -283,7 +283,7 @@ def addSaleFromProformaID(request):
         PID = details['proforma_ID']
         if(len(PID)==0):
             context={'heading' : "Add Sale from Proforma ID", 'message':"Please enter the PID", 'addFromProformaID' : True}
-            return render(request,'app1/view.html', context=context) 
+            return render(request,'app1/view.html', context=context)
         items = models.Proforma_Invoice.objects.filter(PID = PID).all()
         # print(items[0].item_req)
         if(len(items) == 0):
@@ -292,7 +292,7 @@ def addSaleFromProformaID(request):
         elif(items[0].PIDsold == True):
             context['message'] = "Already Sold!!"
             return render(request,'app1/view.html', context=context)
-        
+
         elif(date!=False and short_narration!=False):
             customer = items[0].customer_name;
             for x in items:
@@ -321,19 +321,19 @@ def addSaleFromProformaID(request):
                 x.item_req.save()
                 x.PIDsold = True
                 x.save()
-            
+
             context['addedFromProformaID'] = True
             context['items'] = items
-            context['info'] = items[0] 
+            context['info'] = items[0]
             context['heading'] = f'Sales Added {customer.customer_name}'
             return render(request, 'app1/view.html', context=context)
 
-        
+
         else:
             context['message'] = "PID exists."
             context['addedFromProformaID'] = True
             context['items'] = items
-            context['info'] = items[0]            
+            context['info'] = items[0]
             return render(request,'app1/view.html', context=context)
 
 
@@ -349,7 +349,7 @@ def addSaleFromProformaID(request):
 #     else:
 #         context={'heading' : "Add Sale from Proforma ID", 'message':"Please enter the PID", 'addFromProformaID' : True}
 #         return render(request,'app1/view.html', context=context)
-    
+
 def addsale(request): #changed
     if(request.method=="POST"):
         details=request.POST
@@ -502,7 +502,7 @@ def addsale(request): #changed
                             slitting_rate = slitting_price
 
                         df = add(df,PACKING_CHARGES,TOTAL_AMT,slitting_price,slitting_rate,pleating_price,pleating_rate,RATE, IGST,CGST,SGST)
-                        
+
 
                         pg_data = df[1:]
                         if ( sms_date_send == False ) :
@@ -903,7 +903,8 @@ def returnPDF(df, pg_data, customer_name,PROFORMA_INVOICE,DATE, PID):
     doc = SimpleDocTemplate('sales.pdf', rightMargin=0, leftMargin=0, topMargin=0, bottomMargin=0)
 
     def createPageHeader():
-        elements.append(Image('/home/hitensam/INV_MGMT/app1/static/app1/header.png', 7*inch, 1.7*inch)) #  ./app1/static/app1/header.png
+        path = os.path.join(os.path.dirname(__file__), 'static', 'app1' , 'header.png')
+        elements.append(Image(path, 7*inch, 1.7*inch))
         elements.append(Spacer(1, 10))
         if(PROFORMA_INVOICE):
             elements.append(Paragraph("Proforma Invoice", styles['Title']))
@@ -928,7 +929,8 @@ def returnPDF(df, pg_data, customer_name,PROFORMA_INVOICE,DATE, PID):
         elements.append(tbl)
         elements.append(Spacer(1, 10))
         if (PROFORMA_INVOICE):
-            elements.append(Image('/home/hitensam/INV_MGMT/app1/static/app1/footer.jpg', 7*inch, 0.5*inch)) #   ./app1/static/app1/footer.jpg
+            path = os.path.join(os.path.dirname(__file__), 'static', 'app1' , 'footer.jpg')
+            elements.append(Image(path, 7*inch, 0.5*inch))
 
 
 
